@@ -1,46 +1,78 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import { motion, MotionConfig, useScroll, useTransform } from 'motion-v'
 import UnitToggler from './components/exercise/UnitToggler.vue'
+
+const { scrollYProgress } = useScroll()
+const upperOrbY = useTransform(scrollYProgress, [0, 1], [0, 170])
+const lowerOrbY = useTransform(scrollYProgress, [0, 1], [0, -130])
 </script>
 
 <template>
-  <main class="page-shell">
-    <div class="sky-orb sky-orb--one" aria-hidden="true"></div>
-    <div class="sky-orb sky-orb--two" aria-hidden="true"></div>
+  <MotionConfig reduced-motion="user">
+    <motion.div
+      class="scroll-progress"
+      :style="{ scaleX: scrollYProgress }"
+      aria-hidden="true"
+    />
 
-    <section class="weather-app" aria-labelledby="page-title">
-      <header class="app-header">
-        <div class="title-group">
-          <span class="title-icon" aria-hidden="true">🌤️</span>
-          <div>
-            <h1 id="page-title">날씨 대시보드</h1>
-            <p class="subtitle">전국 주요 도시의 날씨를 한눈에 확인해 보세요.</p>
+    <main class="page-shell">
+      <motion.div
+        class="sky-orb sky-orb--one"
+        :style="{ y: upperOrbY }"
+        aria-hidden="true"
+      />
+      <motion.div
+        class="sky-orb sky-orb--two"
+        :style="{ y: lowerOrbY }"
+        aria-hidden="true"
+      />
+
+      <section class="weather-app" aria-labelledby="page-title">
+        <motion.header
+          class="app-header"
+          :initial="{ opacity: 0, y: -18 }"
+          :animate="{ opacity: 1, y: 0 }"
+          :transition="{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }"
+        >
+          <div class="title-group">
+            <motion.span
+              class="title-icon"
+              :while-hover="{ rotate: 8, scale: 1.08 }"
+              :while-press="{ scale: 0.94 }"
+              :transition="{ type: 'spring', stiffness: 340, damping: 18 }"
+              aria-hidden="true"
+            >🌤️</motion.span>
+            <div>
+              <h1 id="page-title">날씨 대시보드</h1>
+              <p class="subtitle">전국 주요 도시의 날씨를 한눈에 확인해 보세요.</p>
+            </div>
           </div>
-        </div>
 
-        <nav class="navigation" aria-label="주요 메뉴">
-          <div class="navigation-links">
-            <RouterLink to="/">
-              <span aria-hidden="true">⌂</span>
-              날씨 대시보드
-            </RouterLink>
-            <RouterLink to="/about">
-              <span aria-hidden="true">ⓘ</span>
-              서비스 소개
-            </RouterLink>
-          </div>
+          <nav class="navigation" aria-label="주요 메뉴">
+            <div class="navigation-links">
+              <RouterLink to="/">
+                <span aria-hidden="true">⌂</span>
+                날씨 대시보드
+              </RouterLink>
+              <RouterLink to="/about">
+                <span aria-hidden="true">ⓘ</span>
+                서비스 소개
+              </RouterLink>
+            </div>
 
-          <UnitToggler />
-        </nav>
-      </header>
+            <UnitToggler />
+          </nav>
+        </motion.header>
 
-      <RouterView v-slot="{ Component, route }">
-        <Transition name="page" mode="out-in">
-          <component :is="Component" :key="route.fullPath" />
-        </Transition>
-      </RouterView>
-    </section>
-  </main>
+        <RouterView v-slot="{ Component, route }">
+          <Transition name="page" mode="out-in">
+            <component :is="Component" :key="route.fullPath" />
+          </Transition>
+        </RouterView>
+      </section>
+    </main>
+  </MotionConfig>
 </template>
 
 <style scoped>
@@ -55,6 +87,20 @@ import UnitToggler from './components/exercise/UnitToggler.vue'
   background:
     linear-gradient(145deg, rgb(239 249 255 / 96%), rgb(223 239 255 / 92%)),
     #e5f2ff;
+}
+
+.scroll-progress {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 4px;
+  border-radius: 0 999px 999px 0;
+  background: linear-gradient(90deg, #3da8e7, #45c6a1, #ffd777);
+  box-shadow: 0 2px 10px rgb(61 168 231 / 32%);
+  transform-origin: 0 50%;
+  pointer-events: none;
 }
 
 .page-shell::before {

@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted, ref, watch, watchEffect } from 'vue'
+import { motion } from 'motion-v'
 import { useRouter } from 'vue-router'
 import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
 import SearchBar from '../components/exercise/SearchBar.vue'
@@ -136,7 +137,12 @@ const openDetail = (city) => {
     >
       <div class="data-source-bar" aria-live="polite">
         <div class="data-source-copy">
-          <span class="live-indicator" aria-hidden="true"></span>
+          <motion.span
+            class="live-indicator"
+            :animate="{ scale: [1, 1.42, 1], opacity: [1, 0.7, 1] }"
+            :transition="{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }"
+            aria-hidden="true"
+          />
           <div>
             <strong>
               {{ weatherStore.isLoadingAll ? '실시간 날씨를 갱신하는 중' : 'OpenWeather 실시간 데이터' }}
@@ -154,7 +160,13 @@ const openDetail = (city) => {
           :disabled="weatherStore.isLoadingAll"
           @click="loadWeather(true)"
         >
-          <span aria-hidden="true">↻</span>
+          <motion.span
+            :animate="weatherStore.isLoadingAll ? { rotate: 360 } : { rotate: 0 }"
+            :transition="weatherStore.isLoadingAll
+              ? { duration: 0.85, repeat: Infinity, ease: 'linear' }
+              : { duration: 0.2 }"
+            aria-hidden="true"
+          >↻</motion.span>
           {{ weatherStore.isLoadingAll ? '갱신 중' : '새로고침' }}
         </button>
       </div>
@@ -165,7 +177,12 @@ const openDetail = (city) => {
       </p>
 
       <div v-if="isInitialLoading" class="loading-grid" aria-busy="true">
-        <div v-for="index in 4" :key="index" class="weather-skeleton">
+        <div
+          v-for="index in 4"
+          :key="index"
+          class="weather-skeleton"
+          :class="{ 'weather-skeleton--featured': index === 1 }"
+        >
           <span></span>
           <div>
             <i></i>
@@ -177,10 +194,12 @@ const openDetail = (city) => {
 
       <div class="weather-list">
         <WeatherCard
-          v-for="city in filteredWeatherList"
+          v-for="(city, index) in filteredWeatherList"
           :key="city.id"
           :city="city"
           :selected="selectedCityInfo?.id === city.id"
+          :reveal-delay="Math.min(index * 0.055, 0.28)"
+          :featured="!trimmedSearchQuery && (index === 0 || index === 5)"
           @select-card="selectCity"
           @click-detail="openDetail"
         />
@@ -206,7 +225,14 @@ const openDetail = (city) => {
       </div>
     </BaseDashboardCard>
 
-    <p class="selection-status" aria-live="polite">
+    <motion.p
+      :key="selectedCityInfo?.id ?? 'empty'"
+      class="selection-status"
+      :initial="{ opacity: 0, y: 8, scale: 0.99 }"
+      :animate="{ opacity: 1, y: 0, scale: 1 }"
+      :transition="{ type: 'spring', stiffness: 330, damping: 25 }"
+      aria-live="polite"
+    >
       <span class="selection-status__icon" aria-hidden="true">
         {{ selectedCityInfo ? '✓' : '✦' }}
       </span>
@@ -217,7 +243,7 @@ const openDetail = (city) => {
       </template>
       <template v-else-if="isInitialLoading">실시간 날씨를 불러오고 있습니다.</template>
       <template v-else>카드를 클릭하거나 검색해 보세요.</template>
-    </p>
+    </motion.p>
   </section>
 </template>
 
@@ -337,6 +363,11 @@ const openDetail = (city) => {
   background: rgb(255 255 255 / 82%);
 }
 
+.weather-skeleton--featured {
+  grid-column: span 2;
+  min-height: 210px;
+}
+
 .weather-skeleton > span {
   width: 52px;
   height: 52px;
@@ -381,6 +412,7 @@ const openDetail = (city) => {
 .weather-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: dense;
   gap: 12px;
 }
 
@@ -466,6 +498,10 @@ const openDetail = (city) => {
   .weather-list,
   .loading-grid {
     grid-template-columns: 1fr;
+  }
+
+  .weather-skeleton--featured {
+    grid-column: auto;
   }
 }
 

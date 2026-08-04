@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { motion } from 'motion-v'
 import { useConfigStore } from '../../stores/configStore'
 
 const configStore = useConfigStore()
@@ -20,14 +21,17 @@ const nextUnitName = computed(() =>
       <strong>{{ currentUnitName }} {{ configStore.unitSymbol }}</strong>
     </span>
 
-    <button
+    <motion.button
       type="button"
       :aria-label="`온도 단위를 ${nextUnitName}로 변경`"
+      :while-hover="{ y: -2, scale: 1.025 }"
+      :while-press="{ scale: 0.94 }"
+      :transition="{ type: 'spring', stiffness: 430, damping: 24 }"
       @click="configStore.toggleUnit"
     >
       <span aria-hidden="true">↔</span>
       단위 변경
-    </button>
+    </motion.button>
   </div>
 </template>
 

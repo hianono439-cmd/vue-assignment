@@ -1,6 +1,6 @@
 # Vue 날씨 대시보드 과제
 
-Composition API, 컴포넌트 분리, Vue Router, Pinia 전역 상태 관리와 Axios 기반 OpenWeatherMap 실시간 날씨 연동을 적용한 프로젝트입니다.
+Composition API, 컴포넌트 분리, Vue Router, Pinia 전역 상태 관리, Axios 기반 OpenWeatherMap 실시간 날씨 연동과 Motion for Vue 애니메이션을 적용한 프로젝트입니다.
 
 ## 실행
 
@@ -59,6 +59,16 @@ GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router
 - API 응답을 카드와 상세 화면에서 사용하는 공통 데이터 구조로 변환
 - 초기 로딩, 일부 도시 실패, 전체 실패, 요청 지연 및 재시도 UI 제공
 - 상세 페이지에서 습도, 풍속, 기압, 가시거리, 구름량, 일출·일몰 표시
+
+## 마이크로 인터랙션 및 스크롤 애니메이션
+
+- Motion for Vue의 `useScroll`, `useTransform`으로 스크롤 진행 바와 배경 패럴랙스 구현
+- 검색·날씨 영역이 화면에 들어올 때 한 번만 자연스럽게 나타나는 스크롤 진입 효과
+- 도시 카드의 순차 등장, 검색 결과 재배치 애니메이션과 호버·클릭 반응
+- 실시간 상태 표시와 새로고침 아이콘의 상태 기반 애니메이션
+- `prefers-reduced-motion` 설정을 존중해 움직임에 민감한 사용자의 애니메이션 최소화
+- 넓은 카드와 기본 카드를 섞은 반응형 Bento Grid 레이아웃
+- 버튼으로 카드를 3D 플립해 체감온도·습도·풍속·가시거리 빠른 정보 표시
 
 ## GitHub Pages 환경변수
 
