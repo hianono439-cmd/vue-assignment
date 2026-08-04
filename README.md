@@ -1,6 +1,6 @@
 # Vue 날씨 대시보드 과제
 
-기존 날씨 Mockup과 Composition API 기능을 유지하면서 컴포넌트 분리 및 Vue Router를 적용한 프로젝트입니다.
+기존 날씨 Mockup과 Composition API 기능을 유지하면서 컴포넌트 분리, Vue Router 및 Pinia 전역 상태 관리를 적용한 프로젝트입니다.
 
 ## 실행
 
@@ -36,3 +36,12 @@ GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router
 - 빈 검색어, 일치 결과, 검색 결과 없음의 세 가지 화면 상태 처리
 - 전국 8개 도시의 날씨 데이터 제공
 - 도시 이름의 받침 여부를 판별해 `이/가` 조사를 올바르게 표시
+
+## Pinia Store 실습
+
+- `stores/configStore.js`에서 온도 단위 상태를 전역 관리
+- `unit` state의 초깃값은 `celsius`
+- `unitSymbol` getter로 현재 단위의 `°C` 또는 `°F` 기호 제공
+- `toggleUnit` action으로 섭씨와 화씨 전환
+- 상단 `UnitToggler.vue`에서 단위를 변경하면 홈 카드와 상세 화면에 동시에 반영
+- `useTemperature` composable에서 중복되는 온도 변환 로직 관리

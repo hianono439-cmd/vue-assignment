@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useTemperature } from '../../composables/useTemperature'
 
 const props = defineProps({
   city: {
@@ -16,6 +17,9 @@ const emit = defineEmits({
   'select-card': (city) => Boolean(city?.id),
   'click-detail': (city) => Boolean(city?.id),
 })
+
+const rawTemperature = computed(() => props.city.temp)
+const { displayTemp, unitSymbol } = useTemperature(rawTemperature)
 
 const selectCard = () => {
   emit('select-card', props.city)
@@ -53,7 +57,7 @@ const weatherIcon = computed(() => {
       <div class="weather-summary">
         <span class="region-label">REGIONAL WEATHER</span>
         <h3>{{ city.name }} <small>({{ city.status }})</small></h3>
-        <p>현재 기온: <strong>{{ city.temp }}°C</strong></p>
+        <p>현재 기온: <strong>{{ displayTemp }}{{ unitSymbol }}</strong></p>
       </div>
     </div>
 

@@ -51,6 +51,7 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
         <span>Vue 3</span>
         <span>Composition API</span>
         <span>Vue Router</span>
+        <span>Pinia</span>
         <span>Scoped CSS</span>
       </div>
     </BaseDashboardCard>

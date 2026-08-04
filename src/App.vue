@@ -1,5 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import UnitToggler from './components/exercise/UnitToggler.vue'
 </script>
 
 <template>
@@ -18,14 +19,18 @@ import { RouterLink, RouterView } from 'vue-router'
         </div>
 
         <nav class="navigation" aria-label="주요 메뉴">
-          <RouterLink to="/">
-            <span aria-hidden="true">⌂</span>
-            날씨 대시보드
-          </RouterLink>
-          <RouterLink to="/about">
-            <span aria-hidden="true">ⓘ</span>
-            서비스 소개
-          </RouterLink>
+          <div class="navigation-links">
+            <RouterLink to="/">
+              <span aria-hidden="true">⌂</span>
+              날씨 대시보드
+            </RouterLink>
+            <RouterLink to="/about">
+              <span aria-hidden="true">ⓘ</span>
+              서비스 소개
+            </RouterLink>
+          </div>
+
+          <UnitToggler />
         </nav>
       </header>
 
@@ -141,6 +146,7 @@ h1 {
 .navigation {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   margin-top: 22px;
   padding: 7px;
@@ -149,7 +155,13 @@ h1 {
   background: #f5faff;
 }
 
-.navigation a {
+.navigation-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navigation-links a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -167,14 +179,14 @@ h1 {
     box-shadow 150ms ease;
 }
 
-.navigation a:hover,
-.navigation a:focus-visible {
+.navigation-links a:hover,
+.navigation-links a:focus-visible {
   color: #267cac;
   background: #e9f6ff;
   outline: none;
 }
 
-.navigation .router-link-exact-active {
+.navigation-links .router-link-exact-active {
   color: #ffffff;
   background: linear-gradient(135deg, #43a9e4, #348fd0);
   box-shadow: 0 7px 16px rgb(52 143 208 / 22%);
@@ -216,10 +228,18 @@ h1 {
     gap: 12px;
   }
 
-  .navigation a {
+  .navigation {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .navigation-links {
+    width: 100%;
+  }
+
+  .navigation-links a {
     flex: 1;
     padding-inline: 8px;
   }
 }
 </style>
-

@@ -2,12 +2,18 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
+import { useTemperature } from '../composables/useTemperature'
 import { findWeatherCity } from '../data/weather'
 
 const route = useRoute()
 const router = useRouter()
 
 const city = computed(() => findWeatherCity(String(route.params.cityId)))
+const rawTemperature = computed(() => city.value?.temp)
+const rawFeelsLike = computed(() => city.value?.feelsLike)
+const { displayTemp: displayTemperature, unitSymbol } =
+  useTemperature(rawTemperature)
+const { displayTemp: displayFeelsLike } = useTemperature(rawFeelsLike)
 
 const weatherIcon = computed(() => {
   const iconMap = {
@@ -44,8 +50,12 @@ const goHome = () => {
         <div class="weather-hero">
           <div>
             <span class="location-label">📍 {{ city.region }}</span>
-            <p class="temperature">{{ city.temp }}<small>°C</small></p>
-            <p class="condition">{{ city.status }} · 체감 {{ city.feelsLike }}°C</p>
+            <p class="temperature">
+              {{ displayTemperature }}<small>{{ unitSymbol }}</small>
+            </p>
+            <p class="condition">
+              {{ city.status }} · 체감 {{ displayFeelsLike }}{{ unitSymbol }}
+            </p>
           </div>
           <span class="weather-hero__icon" aria-hidden="true">{{ weatherIcon }}</span>
         </div>
@@ -53,7 +63,7 @@ const goHome = () => {
         <dl class="detail-grid">
           <div>
             <dt>🌡️ 체감 온도</dt>
-            <dd>{{ city.feelsLike }}°C</dd>
+            <dd>{{ displayFeelsLike }}{{ unitSymbol }}</dd>
           </div>
           <div>
             <dt>💧 습도</dt>
