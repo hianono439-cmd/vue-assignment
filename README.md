@@ -1,6 +1,6 @@
-# Vue 날씨 컴포넌트 과제
+# Vue 날씨 대시보드 과제
 
-기존 날씨 Mockup의 기능을 유지하면서 Vue 컴포넌트로 분리한 프로젝트입니다.
+기존 날씨 Mockup과 Composition API 기능을 유지하면서 컴포넌트 분리 및 Vue Router를 적용한 프로젝트입니다.
 
 ## 실행
 
@@ -9,13 +9,23 @@ npm install
 npm run dev
 ```
 
-## 컴포넌트 구조
+## 페이지 경로
 
-- `WeatherParent.vue`: 반응형 상태, `computed` 검색 필터링, `watch` 및 `watchEffect`, 이벤트 처리
-- `BaseDashboardCard.vue`: 공통 패널 디자인과 기본 슬롯 제공
-- `SearchBar.vue`: 검색어를 props로 받고 `update-query` 이벤트 전달
-- `WeatherCard.vue`: 도시 객체를 props로 받고 `select-card`, `click-detail` 이벤트 전달
-- 모든 컴포넌트 디자인은 각 파일의 `<style scoped>`로 분리
+- `/#/`: 메인 날씨 대시보드
+- `/#/about`: 서비스 소개
+- `/#/weather/:cityId`: 도시별 상세 기상 정보
+- 그 외 주소: 404 페이지
+
+GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router를 사용합니다.
+
+## 프로젝트 구조
+
+- `views/WeatherHomeView.vue`: 반응형 상태, 검색 필터링, 감시 및 라우터 이동 처리
+- `views/WeatherDetailView.vue`: 동적 도시 ID로 상세 Mock Data 조회
+- `views/WeatherAboutView.vue`: 서비스 소개 화면
+- `views/NotFoundView.vue`: Catch-all 404 화면
+- `components/exercise/`: 공통 카드, 검색창, 날씨 카드 컴포넌트
+- `router/index.js`: 지연 로딩 라우트와 Hash Router 설정
 
 ## Composition API 실습
 
