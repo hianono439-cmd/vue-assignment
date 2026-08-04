@@ -19,8 +19,8 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
       heading-id="about-service-heading"
     >
       <p class="intro">
-        전국 주요 도시의 날씨를 빠르게 검색하고 상세 기상 정보를 확인할 수 있는
-        Vue 3 기반의 날씨 대시보드입니다.
+        OpenWeatherMap의 실시간 관측 데이터를 이용해 전국 주요 도시의 현재
+        날씨와 상세 기상 정보를 확인할 수 있는 Vue 3 기반 대시보드입니다.
       </p>
 
       <ul class="feature-list">
@@ -32,10 +32,10 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
           </div>
         </li>
         <li>
-          <span aria-hidden="true">🧩</span>
+          <span aria-hidden="true">🌐</span>
           <div>
-            <strong>컴포넌트 구성</strong>
-            <p>검색창과 날씨 카드를 재사용 가능한 컴포넌트로 분리했습니다.</p>
+            <strong>실시간 날씨 연동</strong>
+            <p>Axios로 OpenWeatherMap의 현재 관측 데이터를 불러옵니다.</p>
           </div>
         </li>
         <li>
@@ -52,6 +52,8 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
         <span>Composition API</span>
         <span>Vue Router</span>
         <span>Pinia</span>
+        <span>Axios</span>
+        <span>OpenWeatherMap</span>
         <span>Scoped CSS</span>
       </div>
     </BaseDashboardCard>

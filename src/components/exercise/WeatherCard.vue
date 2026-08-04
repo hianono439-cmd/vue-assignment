@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useTemperature } from '../../composables/useTemperature'
+import { getWeatherEmoji } from '../../utils/weatherPresentation'
 
 const props = defineProps({
   city: {
@@ -29,16 +30,7 @@ const clickDetail = () => {
   emit('click-detail', props.city)
 }
 
-const weatherIcon = computed(() => {
-  const iconMap = {
-    맑음: '☀️',
-    비: '🌧️',
-    구름: '☁️',
-    흐림: '🌥️',
-  }
-
-  return iconMap[props.city.status] ?? '🌤️'
-})
+const weatherIcon = computed(() => getWeatherEmoji(props.city.status))
 </script>
 
 <template>
@@ -55,8 +47,10 @@ const weatherIcon = computed(() => {
       <span class="condition-icon" aria-hidden="true">{{ weatherIcon }}</span>
 
       <div class="weather-summary">
-        <span class="region-label">REGIONAL WEATHER</span>
-        <h3>{{ city.name }} <small>({{ city.status }})</small></h3>
+        <span class="region-label">
+          <i aria-hidden="true"></i> LIVE WEATHER
+        </span>
+        <h3>{{ city.name }} <small>({{ city.description }})</small></h3>
         <p>현재 기온: <strong>{{ displayTemp }}{{ unitSymbol }}</strong></p>
       </div>
     </div>
@@ -134,12 +128,23 @@ const weatherIcon = computed(() => {
 }
 
 .region-label {
+  align-items: center;
+  display: flex;
+  gap: 5px;
   display: block;
   margin-bottom: 4px;
   color: #8aa0b3;
   font-size: 0.59rem;
   font-weight: 800;
   letter-spacing: 0.12em;
+}
+
+.region-label i {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #37bc80;
+  box-shadow: 0 0 0 3px rgb(55 188 128 / 13%);
 }
 
 h3 {

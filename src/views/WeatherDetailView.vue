@@ -1,30 +1,55 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
 import { useTemperature } from '../composables/useTemperature'
 import { findWeatherCity } from '../data/weather'
+import { useWeatherStore } from '../stores/weatherStore'
+import { getWeatherEmoji } from '../utils/weatherPresentation'
 
 const route = useRoute()
 const router = useRouter()
+const weatherStore = useWeatherStore()
 
-const city = computed(() => findWeatherCity(String(route.params.cityId)))
+const cityId = computed(() => String(route.params.cityId))
+const cityDefinition = computed(() => findWeatherCity(cityId.value))
+const city = computed(() => weatherStore.getWeatherById(cityId.value))
+const isLoading = computed(() => weatherStore.isCityLoading(cityId.value))
+const detailError = computed(() => weatherStore.getCityError(cityId.value))
+
 const rawTemperature = computed(() => city.value?.temp)
 const rawFeelsLike = computed(() => city.value?.feelsLike)
 const { displayTemp: displayTemperature, unitSymbol } =
   useTemperature(rawTemperature)
 const { displayTemp: displayFeelsLike } = useTemperature(rawFeelsLike)
 
-const weatherIcon = computed(() => {
-  const iconMap = {
-    맑음: '☀️',
-    비: '🌧️',
-    구름: '☁️',
-    흐림: '🌥️',
-  }
+const weatherIcon = computed(() => getWeatherEmoji(city.value?.status))
 
-  return iconMap[city.value?.status] ?? '🌤️'
-})
+const formatCityTime = (unixTimestamp) => {
+  if (!unixTimestamp || !city.value) return '—'
+
+  const cityTime = new Date(
+    (unixTimestamp + city.value.timezone) * 1000,
+  )
+
+  return new Intl.DateTimeFormat('ko-KR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+  }).format(cityTime)
+}
+
+const loadDetail = async (force = false) => {
+  if (!cityDefinition.value) return
+
+  try {
+    await weatherStore.loadCity(cityId.value, { force })
+  } catch {
+    // 사용자에게는 Store에서 정리한 오류 메시지를 표시합니다.
+  }
+}
+
+watch(cityId, () => loadDetail(), { immediate: true })
 
 const goHome = () => {
   router.push({ name: 'weather-home' })
@@ -33,16 +58,23 @@ const goHome = () => {
 
 <template>
   <section class="detail-view" aria-labelledby="detail-heading">
-    <template v-if="city">
+    <template v-if="cityDefinition">
       <div class="view-heading">
         <span class="view-heading__icon" aria-hidden="true">{{ weatherIcon }}</span>
         <div>
           <p>WEATHER OBSERVATION</p>
-          <h2 id="detail-heading">{{ city.name }} 상세 날씨</h2>
+          <h2 id="detail-heading">{{ cityDefinition.name }} 상세 날씨</h2>
         </div>
       </div>
 
+      <div v-if="isLoading && !city" class="detail-loading" aria-busy="true">
+        <span aria-hidden="true">🌦️</span>
+        <strong>실시간 관측 정보를 불러오는 중입니다.</strong>
+        <i></i>
+      </div>
+
       <BaseDashboardCard
+        v-else-if="city"
         title="지역별 상세 기상 관측 정보"
         icon="📊"
         heading-id="observation-heading"
@@ -54,7 +86,7 @@ const goHome = () => {
               {{ displayTemperature }}<small>{{ unitSymbol }}</small>
             </p>
             <p class="condition">
-              {{ city.status }} · 체감 {{ displayFeelsLike }}{{ unitSymbol }}
+              {{ city.description }} · 체감 {{ displayFeelsLike }}{{ unitSymbol }}
             </p>
           </div>
           <span class="weather-hero__icon" aria-hidden="true">{{ weatherIcon }}</span>
@@ -74,19 +106,46 @@ const goHome = () => {
             <dd>{{ city.windSpeed }}m/s</dd>
           </div>
           <div>
-            <dt>☂️ 강수 확률</dt>
-            <dd>{{ city.precipitation }}%</dd>
+            <dt>🧭 기압</dt>
+            <dd>{{ city.pressure }}hPa</dd>
           </div>
           <div>
-            <dt>🌿 대기질</dt>
-            <dd>{{ city.airQuality }}</dd>
+            <dt>👀 가시거리</dt>
+            <dd>{{ city.visibilityKm }}km</dd>
+          </div>
+          <div>
+            <dt>☁️ 구름량</dt>
+            <dd>{{ city.cloudiness }}%</dd>
           </div>
         </dl>
 
-        <p class="mock-notice">
-          실습용 Mock Data를 사용한 기상 관측 정보입니다.
-        </p>
+        <div class="observation-meta">
+          <span>🌅 일출 {{ formatCityTime(city.sunrise) }}</span>
+          <span>🌇 일몰 {{ formatCityTime(city.sunset) }}</span>
+          <span>☔ 1시간 강수량 {{ city.rainLastHour }}mm</span>
+        </div>
+
+        <div class="source-notice">
+          <p>
+            <span aria-hidden="true"></span>
+            OpenWeatherMap 실시간 관측 데이터
+          </p>
+          <button
+            type="button"
+            :disabled="isLoading"
+            @click="loadDetail(true)"
+          >
+            ↻ {{ isLoading ? '갱신 중' : '새로고침' }}
+          </button>
+        </div>
       </BaseDashboardCard>
+
+      <div v-else class="detail-error" role="alert">
+        <span aria-hidden="true">⚠️</span>
+        <strong>날씨 정보를 불러오지 못했습니다.</strong>
+        <p>{{ detailError }}</p>
+        <button type="button" @click="loadDetail(true)">다시 시도</button>
+      </div>
     </template>
 
     <div v-else class="unknown-city" role="alert">
@@ -105,6 +164,80 @@ const goHome = () => {
 <style scoped>
 .detail-view {
   padding-top: 24px;
+}
+
+.detail-loading,
+.detail-error {
+  display: grid;
+  justify-items: center;
+  margin-top: 24px;
+  padding: 54px 20px;
+  border: 1px solid #dce9f3;
+  border-radius: 20px;
+  color: #71879a;
+  background: linear-gradient(145deg, #f9fcfe, #f3f9fd);
+  text-align: center;
+}
+
+.detail-loading > span,
+.detail-error > span {
+  margin-bottom: 12px;
+  font-size: 2.4rem;
+}
+
+.detail-loading strong,
+.detail-error strong {
+  color: #3d5e76;
+  font-size: 0.9rem;
+}
+
+.detail-loading i {
+  width: 180px;
+  height: 5px;
+  margin-top: 18px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #dbeaf3, #4fb6df, #dbeaf3);
+  background-size: 200% 100%;
+  animation: detail-loading 1.2s ease-in-out infinite;
+}
+
+@keyframes detail-loading {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.detail-error p {
+  margin: 8px 0 16px;
+  font-size: 0.78rem;
+}
+
+.detail-error button,
+.source-notice button {
+  min-height: 35px;
+  padding: 7px 12px;
+  border: 1px solid #c7dce9;
+  border-radius: 10px;
+  color: #397392;
+  background: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.detail-error button:hover,
+.detail-error button:focus-visible,
+.source-notice button:hover,
+.source-notice button:focus-visible {
+  border-color: #4aa8dd;
+  color: #176d9f;
+  background: #eaf7ff;
+  outline: none;
+}
+
+.source-notice button:disabled {
+  cursor: wait;
+  opacity: 0.58;
 }
 
 .view-heading {
@@ -196,7 +329,7 @@ const goHome = () => {
 
 .detail-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   margin: 14px 0 0;
 }
@@ -222,11 +355,48 @@ const goHome = () => {
   font-weight: 850;
 }
 
-.mock-notice {
-  margin: 13px 0 0;
-  color: #8a9bad;
-  font-size: 0.7rem;
-  text-align: right;
+.observation-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.observation-meta span {
+  padding: 6px 9px;
+  border-radius: 999px;
+  color: #668098;
+  background: #edf5fa;
+  font-size: 0.66rem;
+  font-weight: 700;
+}
+
+.source-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid #dce9f2;
+}
+
+.source-notice p {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: #7b91a3;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.source-notice p span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #37bc80;
+  box-shadow: 0 0 0 4px rgb(55 188 128 / 12%);
 }
 
 .unknown-city {
@@ -297,7 +467,16 @@ const goHome = () => {
   }
 
   .detail-grid div:last-child {
-    grid-column: 1 / -1;
+    grid-column: auto;
+  }
+
+  .source-notice {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .source-notice button {
+    width: 100%;
   }
 }
 </style>
