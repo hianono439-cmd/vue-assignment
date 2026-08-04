@@ -28,6 +28,10 @@ import UnitToggler from './components/exercise/UnitToggler.vue'
               <span aria-hidden="true">ⓘ</span>
               서비스 소개
             </RouterLink>
+            <RouterLink to="/lab">
+              <span aria-hidden="true">⚗</span>
+              API·JWT 실습
+            </RouterLink>
           </div>
 
           <UnitToggler />

@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { useAuthStore } from '../stores/authStore'
 
 const routes = [
   {
@@ -17,6 +18,17 @@ const routes = [
     component: () => import('../views/WeatherDetailView.vue'),
   },
   {
+    path: '/login',
+    name: 'practice-login',
+    component: () => import('../views/LoginView.vue'),
+  },
+  {
+    path: '/lab',
+    name: 'practice-lab',
+    component: () => import('../views/PracticeLabView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('../views/NotFoundView.vue'),
@@ -29,5 +41,30 @@ const router = createRouter({
   scrollBehavior: () => ({ top: 0 }),
 })
 
-export default router
+router.beforeEach(async (to) => {
+  const authStore = useAuthStore()
 
+  if (to.meta.requiresAuth) {
+    if (!authStore.isLoggedIn) {
+      return {
+        name: 'practice-login',
+        query: { redirect: to.fullPath },
+      }
+    }
+
+    try {
+      await authStore.fetchMyProfile()
+    } catch {
+      return {
+        name: 'practice-login',
+        query: { redirect: to.fullPath },
+      }
+    }
+  }
+
+  if (to.name === 'practice-login' && authStore.isLoggedIn) {
+    return { name: 'practice-lab' }
+  }
+})
+
+export default router

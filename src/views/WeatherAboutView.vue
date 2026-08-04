@@ -45,6 +45,13 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
             <p>Vue Router로 메인·상세·소개·404 페이지를 연결했습니다.</p>
           </div>
         </li>
+        <li>
+          <span aria-hidden="true">🧪</span>
+          <div>
+            <strong>API·JWT 실습실</strong>
+            <p>Mock API에서 로그인하고 Bearer 인증과 REST CRUD를 연습합니다.</p>
+          </div>
+        </li>
       </ul>
 
       <div class="tech-stack" aria-label="사용 기술">
@@ -54,6 +61,8 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
         <span>Pinia</span>
         <span>Axios</span>
         <span>OpenWeatherMap</span>
+        <span>Mock REST API</span>
+        <span>JWT</span>
         <span>Scoped CSS</span>
       </div>
     </BaseDashboardCard>
@@ -113,7 +122,7 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
 
 .feature-list {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin: 20px 0 0;
   padding: 0;
