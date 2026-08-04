@@ -2,36 +2,37 @@ export const getWeatherStatus = (weatherMain, cloudiness = 0) => {
   const statusMap = {
     Clear: '맑음',
     Rain: '비',
-    Drizzle: '비',
-    Thunderstorm: '비',
+    Drizzle: '약한 비',
+    Thunderstorm: '천둥번개',
     Snow: '눈',
-    Mist: '흐림',
+    Mist: '안개',
     Smoke: '흐림',
     Haze: '흐림',
     Dust: '흐림',
-    Fog: '흐림',
+    Fog: '안개',
     Sand: '흐림',
     Ash: '흐림',
-    Squall: '흐림',
-    Tornado: '흐림',
+    Squall: '강한 바람',
+    Tornado: '돌풍',
   }
 
   if (weatherMain === 'Clouds') {
-    return cloudiness >= 75 ? '흐림' : '구름'
+    if (cloudiness <= 25) return '구름 조금'
+    if (cloudiness <= 75) return '구름 많음'
+    return '흐림'
   }
 
-  return statusMap[weatherMain] ?? '변화'
+  return statusMap[weatherMain] ?? '날씨 변화'
 }
 
 export const getWeatherEmoji = (status) => {
-  const iconMap = {
-    맑음: '☀️',
-    비: '🌧️',
-    구름: '☁️',
-    흐림: '🌥️',
-    눈: '🌨️',
-    변화: '🌤️',
-  }
-
-  return iconMap[status] ?? '🌤️'
+  if (status === '맑음') return '☀️'
+  if (status.includes('천둥')) return '⛈️'
+  if (status.includes('비')) return '🌧️'
+  if (status.includes('눈')) return '🌨️'
+  if (status.includes('안개')) return '🌫️'
+  if (status.includes('구름')) return '☁️'
+  if (status === '흐림') return '🌥️'
+  if (status.includes('바람') || status.includes('돌풍')) return '💨'
+  return '🌤️'
 }

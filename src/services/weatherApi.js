@@ -29,13 +29,18 @@ export const fetchCurrentWeather = async (cityDefinition) => {
 
   const currentCondition = data.weather?.[0] ?? {}
   const cloudiness = data.clouds?.all ?? 0
+  const familiarStatus = getWeatherStatus(
+    currentCondition.main,
+    cloudiness,
+  )
 
   return {
     ...cityDefinition,
     temp: roundToOneDecimal(data.main.temp),
     feelsLike: roundToOneDecimal(data.main.feels_like),
-    status: getWeatherStatus(currentCondition.main, cloudiness),
-    description: currentCondition.description ?? '날씨 정보 없음',
+    status: familiarStatus,
+    description: familiarStatus,
+    apiDescription: currentCondition.description ?? '',
     humidity: data.main.humidity,
     pressure: data.main.pressure,
     windSpeed: roundToOneDecimal(data.wind?.speed ?? 0),
