@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { motion, MotionConfig, useScroll, useTransform } from 'motion-v'
 import UnitToggler from './components/exercise/UnitToggler.vue'
+import WeatherAssistant from './components/exercise/WeatherAssistant.vue'
 
 const { scrollYProgress } = useScroll()
 const upperOrbY = useTransform(scrollYProgress, [0, 1], [0, 170])
@@ -59,6 +60,10 @@ const lowerOrbY = useTransform(scrollYProgress, [0, 1], [0, -130])
                 <span aria-hidden="true">ⓘ</span>
                 서비스 소개
               </RouterLink>
+              <RouterLink to="/game">
+                <span aria-hidden="true">🎮</span>
+                날씨 게임
+              </RouterLink>
             </div>
 
             <UnitToggler />
@@ -72,6 +77,8 @@ const lowerOrbY = useTransform(scrollYProgress, [0, 1], [0, -130])
         </RouterView>
       </section>
     </main>
+
+    <WeatherAssistant />
   </MotionConfig>
 </template>
 
@@ -281,11 +288,13 @@ h1 {
 
   .navigation-links {
     width: 100%;
+    gap: 3px;
   }
 
   .navigation-links a {
     flex: 1;
     padding-inline: 8px;
+    font-size: 0.7rem;
   }
 }
 </style>

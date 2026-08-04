@@ -17,6 +17,11 @@ const routes = [
     component: () => import('../views/WeatherDetailView.vue'),
   },
   {
+    path: '/game',
+    name: 'weather-game',
+    component: () => import('../views/WeatherGameView.vue'),
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('../views/NotFoundView.vue'),
@@ -30,4 +35,3 @@ const router = createRouter({
 })
 
 export default router
-

@@ -18,6 +18,7 @@ npm run dev
 - `/#/`: 메인 날씨 대시보드
 - `/#/about`: 서비스 소개
 - `/#/weather/:cityId`: 도시별 상세 기상 정보
+- `/#/game`: 실시간 날씨 단서로 도시를 맞히는 미니 게임
 - 그 외 주소: 404 페이지
 
 GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router를 사용합니다.
@@ -27,8 +28,11 @@ GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router
 - `views/WeatherHomeView.vue`: 반응형 상태, 검색 필터링, 감시 및 라우터 이동 처리
 - `views/WeatherDetailView.vue`: 동적 도시 ID로 상세 실시간 관측 정보 조회
 - `views/WeatherAboutView.vue`: 서비스 소개 화면
+- `views/WeatherGameView.vue`: 5라운드 도시 날씨 맞히기 게임
 - `views/NotFoundView.vue`: Catch-all 404 화면
 - `components/exercise/`: 공통 카드, 검색창, 날씨 카드 컴포넌트
+- `components/exercise/WeatherAssistant.vue`: 모든 화면에서 사용하는 날씨 챗봇 패널
+- `composables/useWeatherAssistant.js`: 자연어 질문을 현재 날씨 데이터와 연결하는 분석 로직
 - `router/index.js`: 지연 로딩 라우트와 Hash Router 설정
 - `services/weatherApi.js`: Axios 인스턴스, OpenWeatherMap 요청 및 응답 변환
 - `stores/weatherStore.js`: 홈과 상세 페이지가 공유하는 실시간 날씨 상태
@@ -69,6 +73,16 @@ GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router
 - `prefers-reduced-motion` 설정을 존중해 움직임에 민감한 사용자의 애니메이션 최소화
 - 넓은 카드와 기본 카드를 섞은 반응형 Bento Grid 레이아웃
 - 버튼으로 카드를 3D 플립해 체감온도·습도·풍속·가시거리 빠른 정보 표시
+
+## 날씨 미니 게임과 챗봇
+
+- 현재 기온·체감온도·습도·풍속을 단서로 도시를 맞히는 5라운드 게임
+- 정답 판정, 점수 계산, 축하 애니메이션과 기기별 최고 점수 저장
+- 화면 오른쪽 아래에서 언제든 열 수 있는 날씨 AI 스타일 도우미
+- 도시별 현재 날씨, 옷차림, 우산 필요 여부와 가장 덥거나 습한 도시 분석
+- 질문은 외부 서비스로 보내지 않고 브라우저에 로딩된 OpenWeather 데이터만 사용
+
+챗봇은 GitHub Pages에서도 안전하게 실행되도록 만든 데이터 분석형 로컬 도우미입니다. 생성형 AI 모델과 연결하려면 API 키를 브라우저에 노출하지 않도록 별도의 백엔드 또는 서버리스 함수를 사용해야 합니다.
 
 ## GitHub Pages 환경변수
 
