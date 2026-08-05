@@ -64,6 +64,10 @@ const lowerOrbY = useTransform(scrollYProgress, [0, 1], [0, -130])
                 <span aria-hidden="true">🎮</span>
                 날씨 게임
               </RouterLink>
+              <RouterLink to="/outings">
+                <span aria-hidden="true">🚗</span>
+                나들이 추천
+              </RouterLink>
               <RouterLink to="/about">
                 <span aria-hidden="true">ⓘ</span>
                 서비스 소개
@@ -219,6 +223,7 @@ h1 {
 .navigation-links {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
 }
 

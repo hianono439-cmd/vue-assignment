@@ -32,6 +32,11 @@ const routes = [
     component: () => import('../views/WeatherGameView.vue'),
   },
   {
+    path: '/outings',
+    name: 'outing-recommendations',
+    component: () => import('../views/OutingRecommendationsView.vue'),
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('../views/NotFoundView.vue'),

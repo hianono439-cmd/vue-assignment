@@ -25,7 +25,7 @@ export const getWeatherStatus = (weatherMain, cloudiness = 0) => {
   return statusMap[weatherMain] ?? '날씨 변화'
 }
 
-export const getWeatherEmoji = (status) => {
+export const getWeatherEmoji = (status = '') => {
   if (status === '맑음') return '☀️'
   if (status.includes('천둥')) return '⛈️'
   if (status.includes('비')) return '🌧️'

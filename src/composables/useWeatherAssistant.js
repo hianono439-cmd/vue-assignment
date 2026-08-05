@@ -25,6 +25,17 @@ const worldQuestionKeywords = [
   '아프리카',
 ]
 
+const outingQuestionKeywords = [
+  '놀러',
+  '나들이',
+  '갈만한',
+  '행사',
+  '전시',
+  '데이트',
+  '주말에뭐',
+  '오늘뭐',
+]
+
 const hasFinalConsonant = (word = '') => {
   const lastCode = word.charCodeAt(word.length - 1)
   return lastCode >= 0xac00 && lastCode <= 0xd7a3
@@ -64,15 +75,15 @@ export const useWeatherAssistant = () => {
     memberStore.isRegistered
       ? [
           '내 관심 도시 날씨',
+          '오늘 어디 놀러갈까?',
           '세계에서 가장 더운 도시는?',
-          '런던 날씨 알려줘',
           '내 회원정보 보여줘',
         ]
       : [
           '회원가입은 어디서 해?',
+          '오늘 어디 놀러갈까?',
           '세계에서 가장 더운 도시는?',
           '서울 옷차림 추천',
-          '런던 날씨 알려줘',
         ],
   )
 
@@ -238,6 +249,26 @@ export const useWeatherAssistant = () => {
     }
   }
 
+  const getOutingResponse = (question) => {
+    const normalizedQuestion = question.replaceAll(' ', '')
+    if (
+      !outingQuestionKeywords.some((keyword) =>
+        normalizedQuestion.includes(keyword),
+      )
+    ) {
+      return null
+    }
+
+    const greeting = memberStore.member
+      ? `${memberStore.member.name}님, `
+      : ''
+
+    return {
+      text: `${greeting}출발 위치와 운전시간을 설정하면 현재 진행 중인 행사 중 날씨가 괜찮은 곳을 추천해 드릴게요.`,
+      action: { label: '나들이 추천받기', to: '/outings' },
+    }
+  }
+
   const getFavoriteCityQuestion = (question) => {
     const normalizedQuestion = question.replaceAll(' ', '')
     const asksFavoriteCity =
@@ -281,6 +312,13 @@ export const useWeatherAssistant = () => {
     isThinking.value = true
 
     try {
+      const outingResponse = getOutingResponse(question)
+      if (outingResponse) {
+        await new Promise((resolve) => setTimeout(resolve, 240))
+        pushAssistantMessage(outingResponse)
+        return
+      }
+
       const memberResponse = getMemberResponse(question)
       if (memberResponse) {
         await new Promise((resolve) => setTimeout(resolve, 240))

@@ -7,7 +7,7 @@ Composition API, 컴포넌트 분리, Vue Router, Pinia 전역 상태 관리, Ax
 ```bash
 npm install
 cp .env.example .env.local
-# .env.local의 VITE_OPENWEATHER_API_KEY에 본인의 키 입력
+# .env.local에 OpenWeatherMap과 TourAPI 키 입력
 npm run dev
 ```
 
@@ -19,6 +19,7 @@ npm run dev
 - `/#/about`: 서비스 소개
 - `/#/weather/:cityId`: 도시별 상세 기상 정보
 - `/#/game`: 실시간 날씨 단서로 도시를 맞히는 미니 게임
+- `/#/outings`: 출발지·운전시간·날씨를 반영한 현재 행사 추천
 - `/#/world`: 전 세계 주요 도시 날씨 비교
 - `/#/signup`: Element Plus 회원가입 폼
 - 그 외 주소: 404 페이지
@@ -31,6 +32,7 @@ GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router
 - `views/WeatherDetailView.vue`: 동적 도시 ID로 상세 실시간 관측 정보 조회
 - `views/WeatherAboutView.vue`: 서비스 소개 화면
 - `views/WeatherGameView.vue`: 5라운드 도시 날씨 맞히기 게임
+- `views/OutingRecommendationsView.vue`: 2시간 이내 현재 행사와 날씨 기반 나들이 추천
 - `views/WorldWeatherView.vue`: 6개 대륙 12개 도시의 실시간 날씨 비교
 - `views/SignUpView.vue`: 입력값 검증과 완료 화면을 포함한 회원가입
 - `views/NotFoundView.vue`: Catch-all 404 화면
@@ -88,6 +90,7 @@ GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router
 - 국내외 도시별 현재 날씨, 옷차림, 우산 필요 여부와 가장 덥거나 습한 도시 분석
 - 회원 이름과 관심 도시를 연결해 맞춤 인사와 관심 도시 날씨 제공
 - 대화에서 회원가입·세계 날씨 화면으로 바로 이동하는 안내 버튼 제공
+- “오늘 어디 놀러갈까?” 질문에서 나들이 추천 화면으로 이동
 - 질문은 외부 서비스로 보내지 않고 브라우저에 로딩된 OpenWeather 데이터만 사용
 
 날씨 도우미는 브라우저에 불러온 실시간 데이터를 질문에 맞게 정리해서 보여줍니다. 질문 내용은 외부로 전송하지 않습니다.
@@ -101,6 +104,14 @@ GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router
 - 세계 날씨 화면에서 `el-card`, `el-radio-group`, `el-tag`, `el-progress`, `el-loading`, `el-skeleton`, `el-alert` 활용
 - 6개 대륙 12개 도시 필터링과 최고·최저·평균 기온 및 강수 도시 요약
 
+## 날씨 맞춤 나들이 추천
+
+- 사용자가 선택한 국내 도시 또는 브라우저 현재 위치를 출발지로 설정
+- 한국관광공사 TourAPI에서 현재 진행 중인 전국 행사·전시 조회
+- OpenStreetMap 기반 OSRM 자동차 경로 예상시간으로 최대 2시간 이내 후보 필터링
+- 행사 장소의 OpenWeatherMap 현재 날씨와 실내·야외 여부를 추천점수에 반영
+- 실시간 교통량은 반영하지 않으며, 예상 이동시간과 날씨는 출발 전 다시 확인 필요
+
 ## GitHub Pages 환경변수
 
 저장소의 **Settings → Secrets and variables → Actions**에서 다음 Secret을 추가해야 배포 화면에서도 날씨를 불러올 수 있습니다.
@@ -108,8 +119,11 @@ GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router
 ```text
 이름: OPENWEATHER_API_KEY
 값: 본인의 OpenWeatherMap API 키
+
+이름: TOUR_API_KEY
+값: 공공데이터포털에서 발급받은 국문 관광정보 서비스 키
 ```
 
-GitHub Actions가 이 값을 빌드 시 `VITE_OPENWEATHER_API_KEY`로 전달합니다.
+GitHub Actions가 두 값을 빌드 시 각각의 Vite 환경변수로 전달합니다.
 
 GitHub Pages는 정적 프런트엔드이므로 빌드된 JavaScript에서 API 키를 완전히 숨길 수는 없습니다. 저장소에 원문 키를 커밋하지 않기 위한 설정이며, 제출 후에는 키를 재발급하고 OpenWeatherMap에서 가능한 사용 제한을 설정하는 것을 권장합니다.

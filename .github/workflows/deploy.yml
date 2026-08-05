@@ -37,6 +37,7 @@ jobs:
       - name: Build
         env:
           VITE_OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+          VITE_TOUR_API_KEY: ${{ secrets.TOUR_API_KEY }}
         run: npm run build
 
       - name: Setup Pages
