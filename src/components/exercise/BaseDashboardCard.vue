@@ -42,12 +42,11 @@ defineProps({
 
 <style scoped>
 .dashboard-card {
-  margin-top: 24px;
-  padding: 22px;
-  border: 1px solid #e0ebf4;
-  border-radius: 20px;
-  background: linear-gradient(145deg, rgb(248 252 255 / 94%), #f4f9fd);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 90%);
+  margin-top: 30px;
+  padding: 27px;
+  border: 1px solid rgb(31 42 43 / 14%);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 68%);
 }
 
 h2 {
@@ -55,9 +54,9 @@ h2 {
   align-items: center;
   gap: 9px;
   margin: 0 0 15px;
-  color: #29445e;
+  color: #263332;
   font-size: 1rem;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.03em;
 }
 
 @media (max-width: 560px) {

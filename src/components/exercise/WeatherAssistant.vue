@@ -83,20 +83,20 @@ watch(
             >✨</motion.span>
             <div>
               <p>
-                {{ memberStore.member ? `${memberStore.member.name}님 맞춤 안내` : '국내외 날씨 안내' }}
+                {{ memberStore.member ? `${memberStore.member.name}님 맞춤 안내` : '날씨 맞춤 나들이 안내' }}
               </p>
-              <h2 id="assistant-heading">날씨 도우미</h2>
+              <h2 id="assistant-heading">나들이 도우미</h2>
             </div>
           </div>
           <div class="assistant-controls">
             <button type="button" aria-label="대화 초기화" @click="clearConversation">↻</button>
-            <button type="button" aria-label="날씨 도우미 닫기" @click="closeAssistant">×</button>
+            <button type="button" aria-label="나들이 도우미 닫기" @click="closeAssistant">×</button>
           </div>
         </header>
 
         <div class="privacy-note">
           <span aria-hidden="true"></span>
-          국내외 날씨·회원정보 연동 · 대화 외부 전송 없음
+          날씨·행사·회원정보 연동 · 대화 외부 전송 없음
         </div>
 
         <div ref="messageList" class="message-list" aria-live="polite">
@@ -180,8 +180,8 @@ watch(
       @click="openAssistant"
     >
       <span aria-hidden="true">✦</span>
-      <strong>날씨 도우미</strong>
-      <small>날씨를 물어보세요</small>
+      <strong>나들이 도우미</strong>
+      <small>날씨와 갈 곳을 물어보세요</small>
     </motion.button>
   </div>
 </template>
@@ -221,8 +221,8 @@ watch(
   padding: 17px;
   color: #ffffff;
   background:
-    radial-gradient(circle at 90% 10%, rgb(111 230 202 / 32%), transparent 34%),
-    linear-gradient(135deg, #254e6b, #2b8594);
+    radial-gradient(circle at 90% 10%, rgb(237 124 82 / 38%), transparent 34%),
+    linear-gradient(135deg, #1f2b2c, #3b4441);
 }
 
 .assistant-identity {
@@ -335,7 +335,7 @@ watch(
 .message--user p {
   border-radius: 14px 5px 14px 14px;
   color: #ffffff;
-  background: #347da8;
+  background: #263332;
 }
 
 .message-action {
@@ -440,7 +440,7 @@ watch(
   border: 0;
   border-radius: 12px;
   color: #ffffff;
-  background: linear-gradient(135deg, #3ca4d8, #39aa86);
+  background: #ed7c52;
   font-size: 1.05rem;
   font-weight: 900;
 }
@@ -459,9 +459,9 @@ watch(
   border-radius: 17px;
   color: #ffffff;
   background:
-    radial-gradient(circle at 90% 10%, rgb(106 235 197 / 32%), transparent 38%),
-    linear-gradient(135deg, #285570, #2e8696);
-  box-shadow: 0 15px 35px rgb(33 91 120 / 28%);
+    radial-gradient(circle at 90% 10%, rgb(237 124 82 / 42%), transparent 38%),
+    linear-gradient(135deg, #1f2b2c, #3b4441);
+  box-shadow: 0 15px 35px rgb(31 43 44 / 25%);
   text-align: left;
   grid-template-columns: auto 1fr;
   column-gap: 9px;

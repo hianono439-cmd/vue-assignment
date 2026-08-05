@@ -1,12 +1,13 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import { motion, MotionConfig, useScroll, useTransform } from 'motion-v'
+import { computed } from 'vue'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { motion, MotionConfig, useScroll } from 'motion-v'
 import UnitToggler from './components/exercise/UnitToggler.vue'
 import WeatherAssistant from './components/exercise/WeatherAssistant.vue'
 
 const { scrollYProgress } = useScroll()
-const upperOrbY = useTransform(scrollYProgress, [0, 1], [0, 170])
-const lowerOrbY = useTransform(scrollYProgress, [0, 1], [0, -130])
+const route = useRoute()
+const isHome = computed(() => route.name === 'weather-home')
 </script>
 
 <template>
@@ -17,78 +18,55 @@ const lowerOrbY = useTransform(scrollYProgress, [0, 1], [0, -130])
       aria-hidden="true"
     />
 
-    <main class="page-shell">
-      <motion.div
-        class="sky-orb sky-orb--one"
-        :style="{ y: upperOrbY }"
-        aria-hidden="true"
-      />
-      <motion.div
-        class="sky-orb sky-orb--two"
-        :style="{ y: lowerOrbY }"
-        aria-hidden="true"
-      />
+    <div class="page-shell">
+      <motion.header
+        class="app-header"
+        :class="{ 'app-header--overlay': isHome }"
+        :initial="{ opacity: 0, y: -14 }"
+        :animate="{ opacity: 1, y: 0 }"
+        :transition="{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }"
+      >
+        <RouterLink class="brand" to="/" aria-label="나갈까 홈">
+          <span class="brand-mark" aria-hidden="true">N</span>
+          <span class="brand-copy">
+            <strong id="page-title">나갈까<span>.</span></strong>
+            <small>WEATHER-LED OUTINGS</small>
+          </span>
+        </RouterLink>
 
-      <section class="weather-app" aria-labelledby="page-title">
-        <motion.header
-          class="app-header"
-          :initial="{ opacity: 0, y: -18 }"
-          :animate="{ opacity: 1, y: 0 }"
-          :transition="{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }"
-        >
-          <div class="title-group">
-            <motion.span
-              class="title-icon"
-              :while-hover="{ rotate: 8, scale: 1.08 }"
-              :while-press="{ scale: 0.94 }"
-              :transition="{ type: 'spring', stiffness: 340, damping: 18 }"
-              aria-hidden="true"
-            >🌤️</motion.span>
-            <div>
-              <h1 id="page-title">날씨 대시보드</h1>
-              <p class="subtitle">국내외 주요 도시의 날씨를 한눈에 확인해 보세요.</p>
-            </div>
+        <nav class="navigation" aria-label="주요 메뉴">
+          <div class="navigation-links">
+            <RouterLink to="/outings">나들이 추천</RouterLink>
+            <RouterLink to="/">국내 날씨</RouterLink>
+            <RouterLink to="/world">세계 날씨</RouterLink>
+            <RouterLink to="/game">날씨 게임</RouterLink>
+            <RouterLink to="/about">소개</RouterLink>
+            <RouterLink to="/signup">회원가입</RouterLink>
           </div>
+          <UnitToggler />
+        </nav>
+      </motion.header>
 
-          <nav class="navigation" aria-label="주요 메뉴">
-            <div class="navigation-links">
-              <RouterLink to="/">
-                <span aria-hidden="true">⌂</span>
-                국내 날씨
-              </RouterLink>
-              <RouterLink to="/world">
-                <span aria-hidden="true">🌍</span>
-                세계 날씨
-              </RouterLink>
-              <RouterLink to="/game">
-                <span aria-hidden="true">🎮</span>
-                날씨 게임
-              </RouterLink>
-              <RouterLink to="/outings">
-                <span aria-hidden="true">🚗</span>
-                나들이 추천
-              </RouterLink>
-              <RouterLink to="/about">
-                <span aria-hidden="true">ⓘ</span>
-                서비스 소개
-              </RouterLink>
-              <RouterLink to="/signup">
-                <span aria-hidden="true">♙</span>
-                회원가입
-              </RouterLink>
-            </div>
-
-            <UnitToggler />
-          </nav>
-        </motion.header>
-
+      <main
+        class="weather-app"
+        :class="{ 'weather-app--home': isHome }"
+        aria-labelledby="page-title"
+      >
         <RouterView v-slot="{ Component, route }">
           <Transition name="page" mode="out-in">
             <component :is="Component" :key="route.fullPath" />
           </Transition>
         </RouterView>
-      </section>
-    </main>
+      </main>
+
+      <footer class="site-footer">
+        <div>
+          <strong>나갈까<span>.</span></strong>
+          <p>날씨를 읽고, 가까운 즐거움을 찾습니다.</p>
+        </div>
+        <p>Weather · Events · Drive time</p>
+      </footer>
+    </div>
 
     <WeatherAssistant />
   </MotionConfig>
@@ -99,13 +77,8 @@ const lowerOrbY = useTransform(scrollYProgress, [0, 1], [0, -130])
   position: relative;
   isolation: isolate;
   min-height: 100vh;
-  display: grid;
-  place-items: center;
   overflow: hidden;
-  padding: 48px 20px;
-  background:
-    linear-gradient(145deg, rgb(239 249 255 / 96%), rgb(223 239 255 / 92%)),
-    #e5f2ff;
+  background: #f2f0ea;
 }
 
 .scroll-progress {
@@ -114,10 +87,8 @@ const lowerOrbY = useTransform(scrollYProgress, [0, 1], [0, -130])
   top: 0;
   right: 0;
   left: 0;
-  height: 4px;
-  border-radius: 0 999px 999px 0;
-  background: linear-gradient(90deg, #3da8e7, #45c6a1, #ffd777);
-  box-shadow: 0 2px 10px rgb(61 168 231 / 32%);
+  height: 3px;
+  background: #ed7c52;
   transform-origin: 0 50%;
   pointer-events: none;
 }
@@ -125,137 +96,202 @@ const lowerOrbY = useTransform(scrollYProgress, [0, 1], [0, -130])
 .page-shell::before {
   position: absolute;
   z-index: -2;
-  inset: 0;
-  background-image:
-    linear-gradient(rgb(56 137 212 / 5%) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(56 137 212 / 5%) 1px, transparent 1px);
-  background-size: 36px 36px;
-  content: '';
-  mask-image: linear-gradient(to bottom, black, transparent 80%);
-}
-
-.sky-orb {
-  position: absolute;
-  z-index: -1;
+  top: -240px;
+  right: -210px;
+  width: 620px;
+  height: 620px;
   border-radius: 999px;
-  filter: blur(4px);
+  background-image:
+    radial-gradient(circle, rgb(237 124 82 / 15%), rgb(237 124 82 / 0%) 68%);
+  content: '';
   pointer-events: none;
 }
 
-.sky-orb--one {
-  top: -160px;
-  right: -100px;
-  width: 440px;
-  height: 440px;
-  background: rgb(109 192 255 / 28%);
-}
-
-.sky-orb--two {
-  bottom: -220px;
-  left: -140px;
-  width: 520px;
-  height: 520px;
-  background: rgb(112 221 205 / 22%);
-}
-
 .weather-app {
-  width: min(100%, 960px);
-  padding: 38px;
-  border: 1px solid rgb(255 255 255 / 80%);
-  border-radius: 28px;
-  background: rgb(255 255 255 / 88%);
-  box-shadow:
-    0 26px 70px rgb(36 91 138 / 17%),
-    inset 0 1px 0 rgb(255 255 255 / 90%);
-  backdrop-filter: blur(22px);
+  width: min(100% - 40px, 1160px);
+  min-height: calc(100vh - 220px);
+  margin: 0 auto;
+  padding: 34px 0 78px;
+}
+
+.weather-app--home {
+  width: 100%;
+  padding-top: 0;
 }
 
 .app-header {
-  padding: 0 2px 22px;
-  border-bottom: 1px solid #e2edf7;
+  position: relative;
+  z-index: 85;
+  display: flex;
+  width: min(100% - 40px, 1160px);
+  min-height: 92px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0 auto;
+  border-bottom: 1px solid rgb(31 42 43 / 17%);
 }
 
-.title-group {
+.app-header--overlay {
+  position: fixed;
+  top: 3px;
+  right: 0;
+  left: 0;
+  width: 100%;
+  min-height: 82px;
+  padding-inline: max(20px, calc((100vw - 1160px) / 2));
+  border-color: rgb(255 255 255 / 22%);
+  color: #ffffff;
+  background: linear-gradient(to bottom, rgb(16 25 27 / 66%), transparent);
+  backdrop-filter: blur(4px);
+}
+
+.app-header--overlay .brand {
+  color: #ffffff;
+}
+
+.app-header--overlay .brand-mark {
+  border: 1px solid rgb(255 255 255 / 36%);
+  background: rgb(255 255 255 / 12%);
+}
+
+.app-header--overlay .brand-copy small,
+.app-header--overlay .navigation-links a {
+  color: rgb(255 255 255 / 68%);
+}
+
+.app-header--overlay .navigation-links a:hover,
+.app-header--overlay .navigation-links a:focus-visible {
+  color: #ffffff;
+}
+
+.app-header--overlay .navigation-links .router-link-exact-active {
+  color: #f3a27f;
+}
+
+.app-header--overlay :deep(.unit-toggler) {
+  border-color: rgb(255 255 255 / 22%);
+}
+
+.app-header--overlay :deep(.current-unit small),
+.app-header--overlay :deep(.current-unit strong) {
+  color: rgb(255 255 255 / 72%);
+}
+
+.app-header--overlay :deep(.unit-toggler button) {
+  border: 1px solid rgb(255 255 255 / 28%);
+  background: rgb(255 255 255 / 12%);
+}
+
+.brand {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 11px;
+  color: #1d292a;
+  text-decoration: none;
 }
 
-.title-icon {
+.brand-mark {
   display: grid;
   flex: 0 0 auto;
-  width: 58px;
-  height: 58px;
+  width: 37px;
+  height: 37px;
   place-items: center;
-  border: 1px solid rgb(255 255 255 / 80%);
-  border-radius: 18px;
-  background: linear-gradient(145deg, #dff3ff, #fff7cf);
-  box-shadow: 0 10px 25px rgb(65 135 190 / 18%);
-  font-size: 1.8rem;
+  border-radius: 50%;
+  color: #ffffff;
+  background: #1d292a;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1rem;
+  font-style: italic;
 }
 
-h1 {
-  margin: 0;
-  color: #17324d;
-  font-size: clamp(1.38rem, 4vw, 1.8rem);
-  line-height: 1.25;
-  letter-spacing: -0.035em;
+.brand-copy {
+  display: grid;
+  gap: 1px;
 }
 
-.subtitle {
-  margin: 6px 0 0;
-  color: #71849a;
-  font-size: 0.82rem;
+.brand-copy strong {
+  font-size: 1.25rem;
+  letter-spacing: -0.055em;
+  line-height: 1;
+}
+
+.brand-copy strong span,
+.site-footer strong span {
+  color: #ed7c52;
+}
+
+.brand-copy small {
+  color: #687372;
+  font-size: 0.45rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
 }
 
 .navigation {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 22px;
-  padding: 7px;
-  border: 1px solid #e0ebf4;
-  border-radius: 15px;
-  background: #f5faff;
+  gap: 17px;
 }
 
 .navigation-links {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 2px;
 }
 
 .navigation-links a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  min-height: 40px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  color: #6c8297;
-  font-size: 0.72rem;
-  font-weight: 750;
+  min-height: 38px;
+  padding: 8px 9px;
+  color: #66716f;
+  font-size: 0.68rem;
+  font-weight: 700;
   text-decoration: none;
   transition:
     color 150ms ease,
-    background 150ms ease,
-    box-shadow 150ms ease;
+    transform 150ms ease;
 }
 
 .navigation-links a:hover,
 .navigation-links a:focus-visible {
-  color: #267cac;
-  background: #e9f6ff;
+  color: #1d292a;
   outline: none;
+  transform: translateY(-1px);
 }
 
 .navigation-links .router-link-exact-active {
-  color: #ffffff;
-  background: linear-gradient(135deg, #43a9e4, #348fd0);
-  box-shadow: 0 7px 16px rgb(52 143 208 / 22%);
+  color: #df6740;
+}
+
+.site-footer {
+  display: flex;
+  width: min(100% - 40px, 1160px);
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 0 auto;
+  padding: 28px 0 36px;
+  border-top: 1px solid rgb(31 42 43 / 17%);
+  color: #67716f;
+}
+
+.site-footer div {
+  display: grid;
+  gap: 5px;
+}
+
+.site-footer strong {
+  color: #1d292a;
+  font-size: 1rem;
+}
+
+.site-footer p {
+  margin: 0;
+  font-size: 0.59rem;
 }
 
 .page-enter-active,
@@ -271,45 +307,66 @@ h1 {
   transform: translateY(5px);
 }
 
-@media (max-width: 560px) {
-  .page-shell {
-    padding: 0;
+@media (max-width: 900px) {
+  .app-header {
+    align-items: flex-start;
+    padding: 19px 0 13px;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .navigation {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .app-header--overlay {
+    min-height: 126px;
+    padding-inline: 20px;
+    background: linear-gradient(to bottom, rgb(16 25 27 / 78%), transparent);
+  }
+}
+
+@media (max-width: 620px) {
+  .weather-app,
+  .app-header,
+  .site-footer {
+    width: min(100% - 28px, 1160px);
   }
 
   .weather-app {
-    min-height: 100vh;
-    padding: 24px 16px;
-    border: 0;
-    border-radius: 0;
+    padding-top: 20px;
   }
 
-  .title-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 15px;
-    font-size: 1.5rem;
-  }
-
-  .title-group {
-    gap: 12px;
+  .weather-app--home {
+    width: 100%;
+    padding-top: 0;
   }
 
   .navigation {
     align-items: stretch;
     flex-direction: column;
+    gap: 8px;
   }
 
   .navigation-links {
-    display: grid;
     width: 100%;
-    gap: 3px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 3px;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
   }
 
   .navigation-links a {
-    flex: 1;
-    padding-inline: 8px;
-    font-size: 0.7rem;
+    flex: none;
+    padding-inline: 9px;
+    font-size: 0.66rem;
+  }
+
+  .site-footer {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 </style>

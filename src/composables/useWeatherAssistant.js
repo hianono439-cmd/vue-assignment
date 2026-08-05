@@ -9,8 +9,8 @@ const createInitialMessage = (member) => ({
   id: Date.now(),
   role: 'assistant',
   text: member
-    ? `${member.name}님, 안녕하세요. 관심 도시인 ${member.favoriteCity} 날씨나 세계 주요 도시의 날씨를 물어보세요.`
-    : '안녕하세요. 국내외 도시 날씨를 알려드릴게요. 회원가입을 하면 관심 도시도 기억할 수 있어요.',
+    ? `${member.name}님, 안녕하세요. ${member.favoriteCity} 날씨나 오늘 갈 만한 곳을 물어보세요.`
+    : '안녕하세요. 국내외 도시 날씨와 오늘 갈 만한 곳을 함께 찾아드릴게요.',
 })
 
 const worldQuestionKeywords = [

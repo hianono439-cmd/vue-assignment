@@ -139,8 +139,8 @@ const registerAgain = () => {
     <div class="signup-intro">
       <span aria-hidden="true">👤</span>
       <p>회원 정보 등록</p>
-      <h2 id="signup-heading">날씨 대시보드 회원가입</h2>
-      <strong>관심 도시를 등록하고 자주 확인해 보세요.</strong>
+      <h2 id="signup-heading">나갈까. 회원가입</h2>
+      <strong>관심 도시를 등록하고 맞춤 추천을 받아보세요.</strong>
 
       <ol>
         <li><span>1</span>기본 정보 입력</li>
@@ -250,7 +250,7 @@ const registerAgain = () => {
       <el-result
         icon="success"
         title="회원가입이 완료되었습니다"
-        :sub-title="`${memberStore.member?.name}님, 날씨 대시보드에 오신 것을 환영합니다.`"
+        :sub-title="`${memberStore.member?.name}님, 나갈까.에 오신 것을 환영합니다.`"
       >
         <template #extra>
           <div class="member-summary">
@@ -259,7 +259,7 @@ const registerAgain = () => {
             <div><span>가입일</span><strong>{{ joinedDate }}</strong></div>
           </div>
           <div class="result-actions">
-            <el-button type="primary" @click="router.push('/world')">세계 날씨 보기</el-button>
+            <el-button type="primary" @click="router.push('/outings')">나들이 추천받기</el-button>
             <el-button @click="registerAgain">다시 가입하기</el-button>
           </div>
         </template>
@@ -279,12 +279,12 @@ const registerAgain = () => {
 .signup-intro {
   align-self: start;
   padding: 24px;
-  border-radius: 20px;
+  border-radius: 4px;
   color: #ffffff;
   background:
-    radial-gradient(circle at 80% 8%, rgb(255 221 119 / 25%), transparent 34%),
-    linear-gradient(145deg, #2b5673, #2d8491);
-  box-shadow: 0 14px 30px rgb(44 96 119 / 17%);
+    radial-gradient(circle at 80% 8%, rgb(237 124 82 / 35%), transparent 34%),
+    linear-gradient(145deg, #1f2b2c, #3b4441);
+  box-shadow: 0 18px 38px rgb(31 43 44 / 14%);
 }
 
 .signup-intro > span {
@@ -300,7 +300,7 @@ const registerAgain = () => {
 
 .signup-intro > p {
   margin: 17px 0 4px;
-  color: #a6dedb;
+  color: #ef9e78;
   font-size: 0.62rem;
   font-weight: 850;
 }
@@ -314,7 +314,7 @@ const registerAgain = () => {
 .signup-intro > strong {
   display: block;
   margin-top: 8px;
-  color: #c3dfe4;
+  color: rgb(255 255 255 / 66%);
   font-size: 0.72rem;
   font-weight: 600;
   line-height: 1.6;
@@ -346,15 +346,15 @@ const registerAgain = () => {
   height: 23px;
   place-items: center;
   border-radius: 999px;
-  color: #285872;
-  background: #dff9f2;
+  color: #ffffff;
+  background: #ed7c52;
   font-size: 0.6rem;
 }
 
 .signup-card,
 .signup-result {
-  border-color: #dae8f1;
-  border-radius: 20px;
+  border-color: rgb(31 42 43 / 13%);
+  border-radius: 4px;
 }
 
 .signup-card :deep(.el-card__body) {
@@ -374,7 +374,7 @@ const registerAgain = () => {
 .signup-form :deep(.el-input__wrapper),
 .signup-form :deep(.el-select__wrapper) {
   min-height: 41px;
-  border-radius: 10px;
+  border-radius: 4px;
 }
 
 .two-column-fields {
@@ -420,8 +420,8 @@ const registerAgain = () => {
   justify-content: space-between;
   gap: 12px;
   padding: 9px 11px;
-  border-radius: 9px;
-  background: #f2f7fa;
+  border-radius: 4px;
+  background: #f3f1eb;
   font-size: 0.67rem;
 }
 

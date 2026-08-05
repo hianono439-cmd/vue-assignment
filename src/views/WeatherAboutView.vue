@@ -8,48 +8,48 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
     <div class="view-heading">
       <span aria-hidden="true">ⓘ</span>
       <div>
-        <p>날씨 서비스 소개</p>
-        <h2 id="about-heading">서비스 소개</h2>
+        <p>ABOUT NAGALKKA</p>
+        <h2 id="about-heading">나갈까. 소개</h2>
       </div>
     </div>
 
     <BaseDashboardCard
-      title="날씨 대시보드를 소개합니다"
-      icon="🌤️"
+      title="오늘 갈 곳을 고르는 새로운 방법"
+      icon="↗"
       heading-id="about-service-heading"
     >
       <p class="intro">
-        OpenWeatherMap의 실시간 관측 데이터를 이용해 전국 주요 도시의 현재
-        날씨와 상세 기상 정보를 확인할 수 있는 대시보드입니다.
+        나갈까.는 현재 날씨와 자동차 이동시간, 진행 중인 행사를 연결해
+        오늘 부담 없이 다녀올 만한 곳을 골라주는 나들이 추천 서비스입니다.
       </p>
 
       <ul class="feature-list">
         <li>
           <span aria-hidden="true">🔎</span>
           <div>
-            <strong>도시 검색</strong>
-            <p>도시 이름을 입력하면 일치하는 카드만 바로 확인할 수 있습니다.</p>
+            <strong>출발 위치 설정</strong>
+            <p>도시를 선택하거나 현재 위치를 이용해 가까운 일정을 찾습니다.</p>
           </div>
         </li>
         <li>
           <span aria-hidden="true">🌐</span>
           <div>
-            <strong>실시간 날씨 연동</strong>
-            <p>날씨 제공 서비스에서 현재 관측 정보를 불러옵니다.</p>
+            <strong>날씨 맞춤 판단</strong>
+            <p>기온과 비·눈, 바람, 실내 여부를 함께 살펴 추천점수를 계산합니다.</p>
           </div>
         </li>
         <li>
           <span aria-hidden="true">🧭</span>
           <div>
-            <strong>라우터 화면 이동</strong>
-            <p>메인·상세·소개 화면을 편하게 이동할 수 있습니다.</p>
+            <strong>지금 열리는 행사</strong>
+            <p>현재 진행 중이며 설정한 운전시간 안에 도착할 수 있는 곳만 보여줍니다.</p>
           </div>
         </li>
       </ul>
     </BaseDashboardCard>
 
     <RouterLink class="home-link" to="/">
-      <span aria-hidden="true">←</span> 메인 대시보드로 돌아가기
+      <span aria-hidden="true">←</span> 나갈까. 홈으로 돌아가기
     </RouterLink>
   </section>
 </template>
@@ -71,17 +71,17 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
   width: 45px;
   height: 45px;
   place-items: center;
-  border-radius: 14px;
+  border-radius: 50%;
   color: #ffffff;
-  background: linear-gradient(135deg, #43a9e4, #57c4bb);
+  background: #ed7c52;
   font-size: 1.25rem;
   font-weight: 850;
-  box-shadow: 0 8px 18px rgb(52 143 208 / 18%);
+  box-shadow: none;
 }
 
 .view-heading p {
   margin: 0 0 3px;
-  color: #79a3bd;
+  color: #d96a45;
   font-size: 0.63rem;
   font-weight: 850;
   letter-spacing: 0.12em;
@@ -89,7 +89,7 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
 
 .view-heading h2 {
   margin: 0;
-  color: #29445e;
+  color: #263332;
   font-size: 1.25rem;
   letter-spacing: -0.03em;
 }
@@ -112,9 +112,9 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
 
 .feature-list li {
   padding: 18px;
-  border: 1px solid #deebf4;
-  border-radius: 16px;
-  background: rgb(255 255 255 / 86%);
+  border: 1px solid rgb(31 42 43 / 13%);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 72%);
 }
 
 .feature-list li > span {
@@ -124,7 +124,7 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
 }
 
 .feature-list strong {
-  color: #31536d;
+  color: #263332;
   font-size: 0.87rem;
 }
 
@@ -142,10 +142,10 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
   min-height: 42px;
   margin-top: 16px;
   padding: 9px 15px;
-  border-radius: 11px;
+  border-radius: 999px;
   color: #ffffff;
-  background: #294f6d;
-  box-shadow: 0 8px 18px rgb(41 79 109 / 17%);
+  background: #263332;
+  box-shadow: none;
   font-size: 0.78rem;
   font-weight: 750;
   text-decoration: none;
@@ -153,8 +153,8 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
 
 .home-link:hover,
 .home-link:focus-visible {
-  background: #1f405a;
-  outline: 3px solid rgb(65 169 228 / 23%);
+  background: #df6b44;
+  outline: 3px solid rgb(237 124 82 / 18%);
 }
 
 @media (max-width: 720px) {

@@ -201,11 +201,11 @@ onMounted(() => {
       :transition="{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }"
     >
       <div>
-        <p>오늘 어디 갈까?</p>
-        <h2 id="outing-heading">날씨 맞춤 나들이 추천</h2>
-        <span>현재 진행 중인 행사 중 차로 2시간 안에 갈 수 있는 곳을 찾아드려요.</span>
+        <p>WEATHER × DISTANCE × EVENTS</p>
+        <h2 id="outing-heading">오늘의 날씨가 다음 목적지를 고릅니다.</h2>
+        <span>현재 진행 중인 행사 중 차로 2시간 안에 갈 수 있는 곳만 찾아드려요.</span>
       </div>
-      <span class="outing-hero__icon" aria-hidden="true">🚗</span>
+      <span class="outing-hero__icon" aria-hidden="true">↗</span>
     </motion.div>
 
     <el-card class="outing-controls" shadow="never">
@@ -433,62 +433,78 @@ onMounted(() => {
 
 .outing-hero {
   display: flex;
-  min-height: 142px;
-  align-items: center;
+  min-height: 292px;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 18px;
-  padding: 25px;
-  border-radius: 21px;
+  padding: clamp(28px, 6vw, 54px);
+  border-radius: 4px;
   color: #ffffff;
   background:
-    radial-gradient(circle at 88% 12%, rgb(255 222 120 / 34%), transparent 34%),
-    linear-gradient(135deg, #275c78, #2f9189);
-  box-shadow: 0 15px 32px rgb(43 102 119 / 18%);
+    radial-gradient(circle at 85% 20%, rgb(237 124 82 / 34%), transparent 28%),
+    linear-gradient(135deg, #1f2b2c, #3b4441);
+  box-shadow: 0 22px 55px rgb(31 43 44 / 17%);
 }
 
 .outing-hero p {
   margin: 0 0 5px;
-  color: #b8ece1;
+  color: #ef9e78;
   font-size: 0.66rem;
   font-weight: 900;
-  letter-spacing: 0.11em;
+  letter-spacing: 0.15em;
 }
 
 .outing-hero h2 {
   margin: 0;
-  font-size: clamp(1.35rem, 4vw, 1.85rem);
-  letter-spacing: -0.04em;
+  font-family: 'Noto Serif KR', 'AppleMyungjo', 'Batang', serif;
+  font-size: clamp(2rem, 5.5vw, 3.8rem);
+  font-weight: 400;
+  line-height: 1.22;
+  letter-spacing: -0.06em;
+  text-wrap: balance;
 }
 
 .outing-hero div > span {
   display: block;
   margin-top: 9px;
-  color: #d9f3f1;
+  color: rgb(255 255 255 / 65%);
   font-size: 0.76rem;
 }
 
 .outing-hero__icon {
   display: grid;
   flex: 0 0 auto;
-  width: 78px;
-  height: 78px;
+  width: 72px;
+  height: 72px;
   place-items: center;
-  border: 1px solid rgb(255 255 255 / 20%);
-  border-radius: 23px;
-  background: rgb(255 255 255 / 13%);
-  font-size: 2.35rem;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 18%);
+  border: 1px solid rgb(255 255 255 / 36%);
+  border-radius: 50%;
+  background: #ed7c52;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2rem;
 }
 
 .outing-controls {
   margin-top: 15px;
-  border-color: #dceaf3;
-  border-radius: 18px;
-  background: #f7fbfe;
+  border-color: rgb(31 42 43 / 14%);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 68%);
 }
 
 .outing-controls :deep(.el-card__body) {
-  padding: 17px;
+  padding: 21px;
+}
+
+.outing-controls :deep(.el-button--primary),
+.outing-empty :deep(.el-button--primary) {
+  border-color: #ed7c52;
+  background: #ed7c52;
+}
+
+.outing-controls :deep(.el-button--primary:hover),
+.outing-empty :deep(.el-button--primary:hover) {
+  border-color: #df6b44;
+  background: #df6b44;
 }
 
 .control-grid {
@@ -554,8 +570,8 @@ onMounted(() => {
 
 .outing-loading :deep(.el-card),
 .outing-empty {
-  border-color: #dce9f2;
-  border-radius: 18px;
+  border-color: rgb(31 42 43 / 14%);
+  border-radius: 4px;
 }
 
 .outing-summary {
@@ -566,9 +582,9 @@ onMounted(() => {
 }
 
 .outing-summary :deep(.el-card) {
-  border-color: #dfebf3;
-  border-radius: 15px;
-  background: #fbfdff;
+  border-color: rgb(31 42 43 / 13%);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 65%);
 }
 
 .outing-summary :deep(.el-card__body) {
@@ -584,7 +600,7 @@ onMounted(() => {
 
 .outing-summary strong {
   overflow: hidden;
-  color: #2e607c;
+  color: #263332;
   font-size: 1rem;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -612,7 +628,7 @@ onMounted(() => {
 }
 
 .result-toolbar strong {
-  color: #315d76;
+  color: #263332;
   font-size: 0.78rem;
 }
 
@@ -623,10 +639,10 @@ onMounted(() => {
 
 .outing-card {
   overflow: hidden;
-  border: 1px solid #dbe9f2;
-  border-radius: 19px;
+  border: 1px solid rgb(31 42 43 / 13%);
+  border-radius: 4px;
   background: #ffffff;
-  box-shadow: 0 10px 24px rgb(42 91 120 / 8%);
+  box-shadow: 0 10px 26px rgb(31 43 44 / 7%);
 }
 
 .event-image {
@@ -688,7 +704,7 @@ onMounted(() => {
 .event-content h3 {
   min-height: 44px;
   margin: 11px 0 5px;
-  color: #28485e;
+  color: #263332;
   font-size: 0.94rem;
   line-height: 1.45;
   letter-spacing: -0.025em;
@@ -761,7 +777,7 @@ onMounted(() => {
 }
 
 .event-footer a {
-  color: #2e84b2;
+  color: #d9653e;
   font-weight: 800;
   text-decoration: none;
 }

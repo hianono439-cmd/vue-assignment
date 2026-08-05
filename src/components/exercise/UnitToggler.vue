@@ -42,25 +42,25 @@ const nextUnitName = computed(() =>
   gap: 9px;
   margin-left: auto;
   padding-left: 12px;
-  border-left: 1px solid #dce9f3;
+  border-left: 1px solid rgb(31 42 43 / 14%);
 }
 
 .current-unit {
   display: grid;
   min-width: 68px;
   gap: 1px;
-  color: #60788d;
+  color: #66716f;
   text-align: right;
 }
 
 .current-unit small {
-  color: #91a3b3;
+  color: #89918f;
   font-size: 0.58rem;
   font-weight: 700;
 }
 
 .current-unit strong {
-  color: #375b76;
+  color: #263332;
   font-size: 0.72rem;
   font-weight: 850;
 }
@@ -73,10 +73,10 @@ button {
   gap: 5px;
   padding: 7px 11px;
   border: 0;
-  border-radius: 10px;
+  border-radius: 999px;
   color: #ffffff;
-  background: #294f6d;
-  box-shadow: 0 7px 14px rgb(41 79 109 / 16%);
+  background: #263332;
+  box-shadow: none;
   font-size: 0.7rem;
   font-weight: 800;
   white-space: nowrap;
@@ -87,8 +87,8 @@ button {
 
 button:hover,
 button:focus-visible {
-  background: #1e6d9d;
-  outline: 3px solid rgb(67 169 228 / 20%);
+  background: #df6b44;
+  outline: 3px solid rgb(237 124 82 / 18%);
   transform: translateY(-1px);
 }
 
@@ -98,7 +98,7 @@ button:focus-visible {
     justify-content: space-between;
     margin-left: 0;
     padding: 8px 5px 2px;
-    border-top: 1px solid #dce9f3;
+    border-top: 1px solid rgb(31 42 43 / 14%);
     border-left: 0;
   }
 
