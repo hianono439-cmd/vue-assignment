@@ -40,7 +40,7 @@ const handleInput = (event) => {
       <template v-if="trimmedQuery">
         검색 중인 도시: <strong>{{ trimmedQuery }}</strong>
       </template>
-      <template v-else>도시 이름을 입력하면 즉시 결과가 표시됩니다.</template>
+      <template v-else>검색어와 일치하는 도시만 표시됩니다.</template>
     </p>
   </div>
 </template>

@@ -140,7 +140,7 @@ const registerAgain = () => {
       <span aria-hidden="true">👤</span>
       <p>회원 정보 등록</p>
       <h2 id="signup-heading">나갈까. 회원가입</h2>
-      <strong>관심 도시를 등록하고 맞춤 추천을 받아보세요.</strong>
+      <strong>자주 확인할 도시를 미리 선택하세요.</strong>
 
       <ol>
         <li><span>1</span>기본 정보 입력</li>
@@ -227,7 +227,7 @@ const registerAgain = () => {
 
         <el-form-item>
           <el-checkbox v-model="form.weatherNotice">
-            관심 도시의 날씨 안내를 받겠습니다. (화면 예시)
+            관심 도시를 나들이 도우미에서 사용합니다.
           </el-checkbox>
         </el-form-item>
 
@@ -250,7 +250,7 @@ const registerAgain = () => {
       <el-result
         icon="success"
         title="회원가입이 완료되었습니다"
-        :sub-title="`${memberStore.member?.name}님, 나갈까.에 오신 것을 환영합니다.`"
+        :sub-title="`${memberStore.member?.name}님의 회원 정보가 저장되었습니다.`"
       >
         <template #extra>
           <div class="member-summary">

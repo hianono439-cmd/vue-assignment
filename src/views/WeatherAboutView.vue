@@ -8,19 +8,19 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
     <div class="view-heading">
       <span aria-hidden="true">ⓘ</span>
       <div>
-        <p>ABOUT NAGALKKA</p>
+        <p>서비스 안내</p>
         <h2 id="about-heading">나갈까. 소개</h2>
       </div>
     </div>
 
     <BaseDashboardCard
-      title="오늘 갈 곳을 고르는 새로운 방법"
+      title="나갈까. 이용 방법"
       icon="↗"
       heading-id="about-service-heading"
     >
       <p class="intro">
-        나갈까.는 현재 날씨와 자동차 이동시간, 진행 중인 행사를 연결해
-        오늘 부담 없이 다녀올 만한 곳을 골라주는 나들이 추천 서비스입니다.
+        나갈까.는 현재 날씨와 예상 이동시간을 기준으로
+        진행 중인 행사와 전시를 보여줍니다.
       </p>
 
       <ul class="feature-list">
@@ -34,8 +34,8 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
         <li>
           <span aria-hidden="true">🌐</span>
           <div>
-            <strong>날씨 맞춤 판단</strong>
-            <p>기온과 비·눈, 바람, 실내 여부를 함께 살펴 추천점수를 계산합니다.</p>
+            <strong>날씨 확인</strong>
+            <p>기온과 비·눈, 바람, 실내 여부를 함께 확인합니다.</p>
           </div>
         </li>
         <li>

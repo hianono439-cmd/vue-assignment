@@ -80,10 +80,10 @@ watch(
               :animate="{ rotate: [0, 8, -8, 0] }"
               :transition="{ duration: 2.8, repeat: Infinity, repeatDelay: 2 }"
               aria-hidden="true"
-            >✨</motion.span>
+            >☁</motion.span>
             <div>
               <p>
-                {{ memberStore.member ? `${memberStore.member.name}님 맞춤 안내` : '날씨 맞춤 나들이 안내' }}
+                {{ memberStore.member ? `${memberStore.member.name}님의 관심 도시` : '날씨와 나들이 정보' }}
               </p>
               <h2 id="assistant-heading">나들이 도우미</h2>
             </div>
@@ -96,7 +96,7 @@ watch(
 
         <div class="privacy-note">
           <span aria-hidden="true"></span>
-          날씨·행사·회원정보 연동 · 대화 외부 전송 없음
+          날씨와 관심 도시, 진행 중인 행사를 함께 확인할 수 있습니다.
         </div>
 
         <div ref="messageList" class="message-list" aria-live="polite">
@@ -108,7 +108,7 @@ watch(
             :initial="{ opacity: 0, y: 8 }"
             :animate="{ opacity: 1, y: 0 }"
           >
-            <span v-if="message.role === 'assistant'" aria-hidden="true">봇</span>
+            <span v-if="message.role === 'assistant'" aria-hidden="true">날씨</span>
             <p>
               {{ message.text }}
               <RouterLink
@@ -181,7 +181,7 @@ watch(
     >
       <span aria-hidden="true">✦</span>
       <strong>나들이 도우미</strong>
-      <small>날씨와 갈 곳을 물어보세요</small>
+      <small>도시 날씨와 가까운 행사를 확인하세요</small>
     </motion.button>
   </div>
 </template>

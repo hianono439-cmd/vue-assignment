@@ -106,12 +106,12 @@ const heroHeadline = computed(() => {
 
 const heroDescription = computed(() => {
   const descriptions = {
-    clear: '맑은 날씨를 충분히 즐길 수 있는 행사와 가까운 장소를 찾아보세요.',
-    clouds: '강한 햇빛 걱정 없이 걷기 좋은 일정과 가까운 행사를 찾아보세요.',
-    rain: '비를 피할 수 있는 전시와 실내 행사부터 먼저 골라드릴게요.',
-    snow: '이동시간을 줄이고 실내에서 따뜻하게 즐길 수 있는 곳을 찾아보세요.',
-    fog: '무리한 장거리 운전 없이 가까이 다녀올 수 있는 곳을 찾아보세요.',
-    loading: '지금 날씨와 운전시간, 진행 중인 행사를 한 번에 살펴보세요.',
+    clear: '맑은 날에 가기 좋은 행사와 가까운 장소를 확인하세요.',
+    clouds: '걷기 좋은 일정과 가까운 행사를 확인하세요.',
+    rain: '비를 피할 수 있는 전시와 실내 행사를 먼저 표시합니다.',
+    snow: '이동시간이 짧은 실내 행사를 먼저 확인하세요.',
+    fog: '가까운 곳부터 이동시간을 확인하세요.',
+    loading: '날씨와 이동시간, 진행 중인 행사를 함께 확인합니다.',
   }
   return descriptions[heroTheme.value]
 })
@@ -154,12 +154,8 @@ watch(selectedCityInfo, (newCityInfo, oldCityInfo) => {
   const oldCityName = oldCityInfo?.name ?? '선택 없음'
   const statusMessage = `${newCityInfo.name}${getSubjectParticle(newCityInfo.name)} 선택되었습니다.`
 
-  console.log(
-    `👁️ [watch 감지] 선택 도시가 [${oldCityName}]에서 [${newCityInfo.name}]로 변경됨.`,
-  )
-  console.log(
-    `🟢 [watch 감지] 상태 바 문구가 업데이트되었습니다 -> "${statusMessage}"`,
-  )
+  console.log(`[watch] 선택 도시: ${oldCityName} → ${newCityInfo.name}`)
+  console.log(`[watch] 안내 문구: ${statusMessage}`)
 })
 
 watchEffect(() => {
@@ -167,22 +163,16 @@ watchEffect(() => {
   const matchedCities = filteredWeatherList.value.map((city) => city.name)
 
   if (!query) {
-    console.log(
-      `🔎 [watchEffect 자동 호출] 검색어가 비어 있어 전체 ${matchedCities.length}개 도시를 표시합니다.`,
-    )
+    console.log(`[watchEffect] 전체 ${matchedCities.length}개 도시 표시`)
     return
   }
 
   if (matchedCities.length > 0) {
-    console.log(
-      `🔎 [watchEffect 자동 호출] 현재 검색어 '${query}'에 매칭되는 API 데이터: ${matchedCities.join(', ')}`,
-    )
+    console.log(`[watchEffect] '${query}' 검색 결과: ${matchedCities.join(', ')}`)
     return
   }
 
-  console.log(
-    `🔎 [watchEffect 자동 호출] 현재 검색어 '${query}'에 매칭되는 도시가 없습니다.`,
-  )
+  console.log(`[watchEffect] '${query}' 검색 결과 없음`)
 })
 
 const updateQuery = (query) => {
@@ -195,6 +185,13 @@ const selectCity = (city) => {
 
 const openDetail = (city) => {
   router.push({ name: 'weather-detail', params: { cityId: city.id } })
+}
+
+const scrollToRecommendationGuide = () => {
+  document.getElementById('how-it-works')?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start',
+  })
 }
 </script>
 
@@ -238,7 +235,7 @@ const openDetail = (city) => {
       </div>
 
       <div class="hero-copy">
-        <p class="hero-eyebrow">TODAY'S OUTING · {{ todayLabel }}</p>
+        <p class="hero-eyebrow">오늘의 나들이 · {{ todayLabel }}</p>
         <h2 id="hero-heading">
           <span>{{ heroHeadline[0] }}</span>
           <em>{{ heroHeadline[1] }}</em>
@@ -265,7 +262,7 @@ const openDetail = (city) => {
       >
         <div class="hero-weather__topline">
           <span></span>
-          LIVE WEATHER
+          현재 날씨
         </div>
         <template v-if="heroWeatherCity">
           <strong>{{ heroWeatherCity.name }}</strong>
@@ -286,10 +283,14 @@ const openDetail = (city) => {
         <span><b>03</b> 가까운 행사</span>
       </div>
 
-      <a class="scroll-cue" href="#how-it-works">
-        <span>SCROLL TO EXPLORE</span>
+      <button
+        type="button"
+        class="scroll-cue"
+        @click="scrollToRecommendationGuide"
+      >
+        <span>추천 기준 보기</span>
         <i aria-hidden="true"></i>
-      </a>
+      </button>
     </section>
 
     <motion.section
@@ -302,11 +303,10 @@ const openDetail = (city) => {
     >
       <span class="story-number">01</span>
       <div class="story-copy">
-        <p>WEATHER FIRST</p>
+        <p>날씨 확인</p>
         <h2>가장 먼저, 오늘의 날씨를 읽습니다.</h2>
         <span>
-          단순히 기온만 보지 않습니다. 비와 눈, 바람과 체감온도를 살펴
-          밖에서 걷기 좋은지, 실내 일정이 더 나은지 먼저 판단합니다.
+          비와 눈, 바람, 체감온도를 확인해 야외와 실내 중 더 나은 일정을 고릅니다.
         </span>
       </div>
       <div class="story-weather-orbit" :class="`story-weather-orbit--${heroTheme}`">
@@ -326,19 +326,19 @@ const openDetail = (city) => {
     >
       <span class="story-number">02</span>
       <div class="story-copy">
-        <p>WITHIN TWO HOURS</p>
+        <p>2시간 이내</p>
         <h2>멀리 찾지 않고, 차로 2시간 안에서.</h2>
         <span>
-          출발 도시나 현재 위치를 기준으로 도로 이동시간을 계산합니다.
-          1시간, 1시간 30분, 2시간 중 오늘 가능한 범위를 직접 고를 수 있습니다.
+          출발 도시나 현재 위치를 기준으로 예상 이동시간을 계산합니다.
+          최대 1시간, 1시간 30분, 2시간까지 선택할 수 있습니다.
         </span>
       </div>
       <div class="drive-timeline" aria-label="이동시간 선택 예시">
-        <span><b>60</b><small>MIN</small></span>
+        <span><b>60</b><small>분</small></span>
         <i></i>
-        <span><b>90</b><small>MIN</small></span>
+        <span><b>90</b><small>분</small></span>
         <i></i>
-        <span class="is-active"><b>120</b><small>MIN</small></span>
+        <span class="is-active"><b>120</b><small>분</small></span>
       </div>
     </motion.section>
 
@@ -351,11 +351,11 @@ const openDetail = (city) => {
     >
       <span class="story-number">03</span>
       <div class="story-copy">
-        <p>HAPPENING NOW</p>
+        <p>진행 중인 행사</p>
         <h2>지금 열리는 곳만, 날씨에 맞는 순서로.</h2>
         <span>
-          현재 진행 중인 행사와 전시를 불러와 이동시간과 날씨 점수를 함께 계산합니다.
-          비가 오면 실내 전시를, 맑으면 야외 행사를 먼저 만나보세요.
+          현재 진행 중인 행사와 전시에 이동시간과 날씨 점수를 적용합니다.
+          비가 오면 실내 행사를 먼저 표시합니다.
         </span>
         <RouterLink class="story-cta" to="/outings">
           나들이 추천 시작하기 <span aria-hidden="true">→</span>
@@ -363,17 +363,17 @@ const openDetail = (city) => {
       </div>
       <div class="event-preview" aria-hidden="true">
         <article>
-          <span>EXHIBITION</span>
+          <span>전시</span>
           <strong>실내 전시</strong>
           <small>비 오는 날 우선 추천</small>
         </article>
         <article>
-          <span>FESTIVAL</span>
+          <span>축제</span>
           <strong>야외 축제</strong>
           <small>맑은 날 우선 추천</small>
         </article>
         <article>
-          <span>DRIVE TIME</span>
+          <span>이동시간</span>
           <strong>가까운 순</strong>
           <small>최대 120분 이내</small>
         </article>
@@ -404,7 +404,7 @@ const openDetail = (city) => {
           />
           <div>
             <strong>
-              {{ weatherStore.isLoadingAll ? '실시간 날씨를 갱신하는 중' : 'OpenWeather 실시간 데이터' }}
+              {{ weatherStore.isLoadingAll ? '현재 날씨를 갱신하는 중' : '현재 날씨 관측 정보' }}
             </strong>
             <small v-if="formattedLastUpdated">
               마지막 갱신 {{ formattedLastUpdated }}
@@ -860,6 +860,9 @@ const openDetail = (city) => {
   align-items: center;
   gap: 12px;
   color: rgb(255 255 255 / 62%);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
   font-size: 0.48rem;
   font-weight: 800;
   letter-spacing: 0.12em;

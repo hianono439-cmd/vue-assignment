@@ -9,8 +9,8 @@ const createInitialMessage = (member) => ({
   id: Date.now(),
   role: 'assistant',
   text: member
-    ? `${member.name}님, 안녕하세요. ${member.favoriteCity} 날씨나 오늘 갈 만한 곳을 물어보세요.`
-    : '안녕하세요. 국내외 도시 날씨와 오늘 갈 만한 곳을 함께 찾아드릴게요.',
+    ? `${member.name}님의 관심 도시는 ${member.favoriteCity}입니다. 다른 도시도 검색할 수 있습니다.`
+    : '도시 이름과 함께 날씨, 우산, 옷차림을 입력해 주세요.',
 })
 
 const worldQuestionKeywords = [
@@ -48,12 +48,12 @@ const subject = (word) => `${word}${hasFinalConsonant(word) ? '이' : '가'}`
 const copula = (word) => `${word}${hasFinalConsonant(word) ? '이에요' : '예요'}`
 
 const getOutfitAdvice = (temperature) => {
-  if (temperature >= 28) return '민소매나 반팔처럼 가벼운 옷과 자외선 차단 용품이 좋아요.'
-  if (temperature >= 23) return '반팔이나 얇은 셔츠가 잘 맞아요.'
-  if (temperature >= 20) return '얇은 긴팔이나 가벼운 가디건을 챙겨 보세요.'
-  if (temperature >= 17) return '맨투맨이나 얇은 재킷이 적당해요.'
-  if (temperature >= 12) return '재킷이나 니트처럼 보온되는 겉옷이 필요해요.'
-  if (temperature >= 5) return '코트와 따뜻한 니트를 추천해요.'
+  if (temperature >= 28) return '반팔처럼 가벼운 옷과 자외선 차단 용품이 필요합니다.'
+  if (temperature >= 23) return '반팔이나 얇은 셔츠가 적당합니다.'
+  if (temperature >= 20) return '얇은 긴팔이나 가벼운 가디건을 챙기세요.'
+  if (temperature >= 17) return '맨투맨이나 얇은 재킷이 적당합니다.'
+  if (temperature >= 12) return '재킷이나 니트처럼 보온되는 겉옷이 필요합니다.'
+  if (temperature >= 5) return '코트와 따뜻한 니트를 준비하세요.'
   return '두꺼운 외투와 목도리, 장갑으로 따뜻하게 입으세요.'
 }
 
@@ -105,8 +105,8 @@ export const useWeatherAssistant = () => {
 
     if (question.includes('우산') || question.includes('비')) {
       return needsUmbrella(city)
-        ? `${topic(city.name)} ${city.status} 상태라 우산을 챙기는 편이 좋아요.`
-        : `${topic(city.name)} 현재 ${city.status}이라 비 소식은 보이지 않아요. 그래도 장시간 외출이라면 최신 예보를 한 번 더 확인해 주세요.`
+        ? `${topic(city.name)} 현재 ${city.status}입니다. 우산을 챙기세요.`
+        : `${topic(city.name)} 현재 ${city.status}이며 비는 관측되지 않았습니다.`
     }
 
     if (question.includes('습도')) {
@@ -150,36 +150,36 @@ export const useWeatherAssistant = () => {
     if (normalizedQuestion.includes('우산') || normalizedQuestion.includes('비오는')) {
       const rainyCities = weatherList.filter(needsUmbrella)
       return rainyCities.length > 0
-        ? `${rainyCities.map((item) => item.name).join(', ')}에 비나 눈이 관측되고 있어요. 우산을 챙겨 주세요.`
-        : `${scopeLabel} 중 현재 비나 눈이 관측되는 곳은 없어요.`
+        ? `${rainyCities.map((item) => item.name).join(', ')}에 비나 눈이 관측되고 있습니다. 우산을 챙기세요.`
+        : `${scopeLabel} 중 현재 비나 눈이 관측되는 곳은 없습니다.`
     }
 
     if (normalizedQuestion.includes('습도')) {
       const mostHumid = weatherList.reduce((current, item) =>
         item.humidity > current.humidity ? item : current,
       )
-      return `${scopeLabel} 중 ${subject(mostHumid.name)} 습도 ${mostHumid.humidity}%로 현재 가장 습해요.`
+      return `${scopeLabel} 중 ${subject(mostHumid.name)} 습도 ${mostHumid.humidity}%로 가장 높습니다.`
     }
 
     if (normalizedQuestion.includes('바람') || normalizedQuestion.includes('풍속')) {
       const windiest = weatherList.reduce((current, item) =>
         item.windSpeed > current.windSpeed ? item : current,
       )
-      return `${scopeLabel} 중 ${subject(windiest.name)} 풍속 ${windiest.windSpeed}m/s로 현재 바람이 가장 강해요.`
+      return `${scopeLabel} 중 ${subject(windiest.name)} 풍속 ${windiest.windSpeed}m/s로 바람이 가장 강합니다.`
     }
 
     if (normalizedQuestion.includes('옷') || normalizedQuestion.includes('입')) {
       const averageTemperature =
         weatherList.reduce((sum, item) => sum + item.temp, 0) /
         weatherList.length
-      return `${scopeLabel}의 평균 기온은 약 ${formatTemperature(Math.round(averageTemperature))}예요. ${getOutfitAdvice(averageTemperature)} 도시 이름을 함께 말하면 더 정확히 알려드릴게요.`
+      return `${scopeLabel}의 평균 기온은 약 ${formatTemperature(Math.round(averageTemperature))}입니다. ${getOutfitAdvice(averageTemperature)} 도시 이름을 함께 입력하면 해당 지역을 확인할 수 있습니다.`
     }
 
     if (normalizedQuestion.includes('도시') || normalizedQuestion.includes('전체')) {
-      return `${scopeLabel}에서는 ${weatherList.map((item) => item.name).join(', ')}의 날씨를 확인할 수 있어요. 궁금한 도시 이름을 말해 주세요.`
+      return `${scopeLabel}에서는 ${weatherList.map((item) => item.name).join(', ')}의 날씨를 확인할 수 있습니다.`
     }
 
-    return '국내외 도시 이름과 함께 “날씨”, “옷차림”, “우산”을 물어보거나, “세계에서 가장 더운 도시”처럼 질문해 보세요.'
+    return '도시 이름과 함께 날씨, 옷차림, 우산 중 궁금한 내용을 입력해 주세요.'
   }
 
   const isWorldQuestion = (question) => {
@@ -238,7 +238,7 @@ export const useWeatherAssistant = () => {
 
     if (!memberStore.member) {
       return {
-        text: '아직 등록된 회원 정보가 없어요. 회원가입 화면에서 이름과 관심 도시를 등록해 주세요.',
+        text: '저장된 회원 정보가 없습니다. 회원가입 화면에서 이름과 관심 도시를 등록할 수 있습니다.',
         action: { label: '회원가입하기', to: '/signup' },
       }
     }
@@ -264,7 +264,7 @@ export const useWeatherAssistant = () => {
       : ''
 
     return {
-      text: `${greeting}출발 위치와 운전시간을 설정하면 현재 진행 중인 행사 중 날씨가 괜찮은 곳을 추천해 드릴게요.`,
+      text: `${greeting}출발 위치와 운전시간을 설정하면 진행 중인 행사와 현지 날씨를 함께 확인할 수 있습니다.`,
       action: { label: '나들이 추천받기', to: '/outings' },
     }
   }
@@ -348,7 +348,7 @@ export const useWeatherAssistant = () => {
 
       if (!weatherList.length) {
         pushAssistantMessage({
-          text: '날씨 데이터를 불러오지 못했어요. API 설정과 네트워크 연결을 확인한 뒤 다시 질문해 주세요.',
+          text: '날씨 데이터를 불러오지 못했습니다. API 설정과 네트워크 연결을 확인한 뒤 다시 시도해 주세요.',
         })
         return
       }
@@ -363,12 +363,12 @@ export const useWeatherAssistant = () => {
         ),
         action:
           scope === 'world'
-            ? { label: '세계 날씨 한눈에 보기', to: '/world' }
+            ? { label: '세계 날씨 보기', to: '/world' }
             : undefined,
       })
     } catch {
       pushAssistantMessage({
-        text: '날씨 데이터를 불러오는 중 문제가 생겼어요. 잠시 후 다시 시도해 주세요.',
+        text: '날씨 데이터를 불러오는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.',
       })
     } finally {
       isThinking.value = false
@@ -385,7 +385,7 @@ export const useWeatherAssistant = () => {
       if (!joinedAt || joinedAt === previousJoinedAt) return
 
       pushAssistantMessage({
-        text: `${memberStore.member.name}님, 회원가입이 완료됐어요. 이제 “내 관심 도시 날씨”라고 물으면 ${memberStore.member.favoriteCity}의 날씨를 알려드릴게요.`,
+        text: `${memberStore.member.name}님의 관심 도시가 ${memberStore.member.favoriteCity}로 저장되었습니다. “내 관심 도시 날씨”라고 입력해 보세요.`,
         action: { label: '세계 날씨 둘러보기', to: '/world' },
       })
     },

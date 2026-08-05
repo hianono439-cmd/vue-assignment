@@ -182,9 +182,7 @@ const useCurrentLocation = () => {
 watch(selectedOriginId, (cityId) => {
   try {
     localStorage.setItem(originStorageKey, cityId)
-  } catch {
-    // 브라우저 저장을 사용할 수 없어도 현재 화면의 선택은 유지합니다.
-  }
+  } catch {}
 })
 
 onMounted(() => {
@@ -201,9 +199,9 @@ onMounted(() => {
       :transition="{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }"
     >
       <div>
-        <p>WEATHER × DISTANCE × EVENTS</p>
-        <h2 id="outing-heading">오늘의 날씨가 다음 목적지를 고릅니다.</h2>
-        <span>현재 진행 중인 행사 중 차로 2시간 안에 갈 수 있는 곳만 찾아드려요.</span>
+        <p>오늘 어디 갈까?</p>
+        <h2 id="outing-heading">날씨에 맞는 나들이 장소</h2>
+        <span>현재 진행 중인 행사 중 차로 2시간 안에 갈 수 있는 곳을 찾습니다.</span>
       </div>
       <span class="outing-hero__icon" aria-hidden="true">↗</span>
     </motion.div>
@@ -317,14 +315,14 @@ onMounted(() => {
         <el-card shadow="never">
           <small>실내 일정</small>
           <strong>{{ indoorCount }}곳</strong>
-          <span>비가 와도 비교적 편해요</span>
+          <span>비가 오면 실내 행사 우선</span>
         </el-card>
       </div>
 
       <div class="result-toolbar">
         <div>
           <strong>{{ originLabel }}에서 출발</strong>
-          <span>추천점수 순으로 정렬했어요.</span>
+          <span>날씨와 이동시간 점수순으로 정렬합니다.</span>
         </div>
         <el-radio-group v-model="spaceFilter" size="small">
           <el-radio-button value="전체">전체</el-radio-button>

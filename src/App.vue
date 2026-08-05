@@ -30,7 +30,7 @@ const isHome = computed(() => route.name === 'weather-home')
           <span class="brand-mark" aria-hidden="true">N</span>
           <span class="brand-copy">
             <strong id="page-title">나갈까<span>.</span></strong>
-            <small>WEATHER-LED OUTINGS</small>
+            <small>날씨에 맞춘 가까운 나들이</small>
           </span>
         </RouterLink>
 
@@ -62,9 +62,9 @@ const isHome = computed(() => route.name === 'weather-home')
       <footer class="site-footer">
         <div>
           <strong>나갈까<span>.</span></strong>
-          <p>날씨를 읽고, 가까운 즐거움을 찾습니다.</p>
+          <p>날씨와 가까운 행사를 함께 확인합니다.</p>
         </div>
-        <p>Weather · Events · Drive time</p>
+        <p>날씨 · 행사 · 이동시간</p>
       </footer>
     </div>
 

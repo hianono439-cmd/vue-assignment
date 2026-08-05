@@ -44,9 +44,7 @@ const loadDetail = async (force = false) => {
 
   try {
     await weatherStore.loadCity(cityId.value, { force })
-  } catch {
-    // 사용자에게는 Store에서 정리한 오류 메시지를 표시합니다.
-  }
+  } catch {}
 }
 
 watch(cityId, () => loadDetail(), { immediate: true })
