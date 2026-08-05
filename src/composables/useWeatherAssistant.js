@@ -1,12 +1,29 @@
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { worldCityDefinitions } from '../data/worldCities'
 import { useConfigStore } from '../stores/configStore'
+import { useMemberStore } from '../stores/memberStore'
 import { useWeatherStore } from '../stores/weatherStore'
+import { useWorldWeatherStore } from '../stores/worldWeatherStore'
 
-const initialMessage = {
-  id: 1,
+const createInitialMessage = (member) => ({
+  id: Date.now(),
   role: 'assistant',
-  text: '안녕하세요. 궁금한 도시의 날씨나 옷차림, 우산이 필요한지 물어보세요.',
-}
+  text: member
+    ? `${member.name}님, 안녕하세요. 관심 도시인 ${member.favoriteCity} 날씨나 세계 주요 도시의 날씨를 물어보세요.`
+    : '안녕하세요. 국내외 도시 날씨를 알려드릴게요. 회원가입을 하면 관심 도시도 기억할 수 있어요.',
+})
+
+const worldQuestionKeywords = [
+  '세계',
+  '해외',
+  '대륙',
+  '아시아',
+  '유럽',
+  '북아메리카',
+  '남아메리카',
+  '오세아니아',
+  '아프리카',
+]
 
 const hasFinalConsonant = (word = '') => {
   const lastCode = word.charCodeAt(word.length - 1)
@@ -36,17 +53,28 @@ const needsUmbrella = (city) =>
 
 export const useWeatherAssistant = () => {
   const weatherStore = useWeatherStore()
+  const worldWeatherStore = useWorldWeatherStore()
   const configStore = useConfigStore()
-  const messages = ref([{ ...initialMessage }])
+  const memberStore = useMemberStore()
+  const messages = ref([createInitialMessage(memberStore.member)])
   const draft = ref('')
   const isThinking = ref(false)
 
-  const suggestedQuestions = [
-    '가장 더운 도시는?',
-    '서울 옷차림 추천',
-    '우산이 필요한 곳은?',
-    '습도가 높은 도시는?',
-  ]
+  const suggestedQuestions = computed(() =>
+    memberStore.isRegistered
+      ? [
+          '내 관심 도시 날씨',
+          '세계에서 가장 더운 도시는?',
+          '런던 날씨 알려줘',
+          '내 회원정보 보여줘',
+        ]
+      : [
+          '회원가입은 어디서 해?',
+          '세계에서 가장 더운 도시는?',
+          '서울 옷차림 추천',
+          '런던 날씨 알려줘',
+        ],
+  )
 
   const formatTemperature = (temperature) => {
     if (!Number.isFinite(Number(temperature))) return '확인되지 않음'
@@ -81,7 +109,7 @@ export const useWeatherAssistant = () => {
     return `${topic(city.name)} 현재 ${city.status}, 기온은 ${formatTemperature(city.temp)}예요. 체감온도는 ${formatTemperature(city.feelsLike)}, 습도는 ${city.humidity ?? '확인되지 않음'}%입니다.`
   }
 
-  const buildAnswer = (question, weatherList) => {
+  const buildAnswer = (question, weatherList, scopeLabel) => {
     const normalizedQuestion = question.replaceAll(' ', '')
     const city = findCity(normalizedQuestion, weatherList)
     if (city) return buildCityAnswer(normalizedQuestion, city)
@@ -94,7 +122,7 @@ export const useWeatherAssistant = () => {
       const hottest = weatherList.reduce((current, item) =>
         item.temp > current.temp ? item : current,
       )
-      return `지금 가장 더운 곳은 ${copula(hottest.name)}. 현재 기온은 ${formatTemperature(hottest.temp)}, 날씨는 ${hottest.status}입니다.`
+      return `${scopeLabel} 중 지금 가장 더운 곳은 ${copula(hottest.name)}. 현재 기온은 ${formatTemperature(hottest.temp)}, 날씨는 ${hottest.status}입니다.`
     }
 
     if (
@@ -105,49 +133,139 @@ export const useWeatherAssistant = () => {
       const coldest = weatherList.reduce((current, item) =>
         item.temp < current.temp ? item : current,
       )
-      return `지금 기온이 가장 낮은 곳은 ${copula(coldest.name)}. 현재 ${formatTemperature(coldest.temp)}입니다.`
+      return `${scopeLabel} 중 지금 기온이 가장 낮은 곳은 ${copula(coldest.name)}. 현재 ${formatTemperature(coldest.temp)}입니다.`
     }
 
     if (normalizedQuestion.includes('우산') || normalizedQuestion.includes('비오는')) {
       const rainyCities = weatherList.filter(needsUmbrella)
       return rainyCities.length > 0
         ? `${rainyCities.map((item) => item.name).join(', ')}에 비나 눈이 관측되고 있어요. 우산을 챙겨 주세요.`
-        : '현재 확인된 도시 중 비나 눈이 관측되는 곳은 없어요.'
+        : `${scopeLabel} 중 현재 비나 눈이 관측되는 곳은 없어요.`
     }
 
     if (normalizedQuestion.includes('습도')) {
       const mostHumid = weatherList.reduce((current, item) =>
         item.humidity > current.humidity ? item : current,
       )
-      return `${subject(mostHumid.name)} 습도 ${mostHumid.humidity}%로 현재 가장 습해요.`
+      return `${scopeLabel} 중 ${subject(mostHumid.name)} 습도 ${mostHumid.humidity}%로 현재 가장 습해요.`
     }
 
     if (normalizedQuestion.includes('바람') || normalizedQuestion.includes('풍속')) {
       const windiest = weatherList.reduce((current, item) =>
         item.windSpeed > current.windSpeed ? item : current,
       )
-      return `${subject(windiest.name)} 풍속 ${windiest.windSpeed}m/s로 현재 바람이 가장 강해요.`
+      return `${scopeLabel} 중 ${subject(windiest.name)} 풍속 ${windiest.windSpeed}m/s로 현재 바람이 가장 강해요.`
     }
 
     if (normalizedQuestion.includes('옷') || normalizedQuestion.includes('입')) {
       const averageTemperature =
         weatherList.reduce((sum, item) => sum + item.temp, 0) /
         weatherList.length
-      return `주요 도시의 평균 기온은 약 ${formatTemperature(Math.round(averageTemperature))}예요. ${getOutfitAdvice(averageTemperature)} 도시 이름을 함께 말하면 더 정확히 알려드릴게요.`
+      return `${scopeLabel}의 평균 기온은 약 ${formatTemperature(Math.round(averageTemperature))}예요. ${getOutfitAdvice(averageTemperature)} 도시 이름을 함께 말하면 더 정확히 알려드릴게요.`
     }
 
     if (normalizedQuestion.includes('도시') || normalizedQuestion.includes('전체')) {
-      return `현재 ${weatherList.map((item) => item.name).join(', ')}의 날씨를 확인할 수 있어요. 궁금한 도시 이름을 말해 주세요.`
+      return `${scopeLabel}에서는 ${weatherList.map((item) => item.name).join(', ')}의 날씨를 확인할 수 있어요. 궁금한 도시 이름을 말해 주세요.`
     }
 
-    return '도시 이름과 함께 “날씨”, “옷차림”, “우산”을 물어보거나, “가장 더운 도시”, “습도가 높은 도시”처럼 질문해 보세요.'
+    return '국내외 도시 이름과 함께 “날씨”, “옷차림”, “우산”을 물어보거나, “세계에서 가장 더운 도시”처럼 질문해 보세요.'
   }
 
-  const ensureWeatherData = async () => {
-    if (weatherStore.weatherList.length === 0) {
-      await weatherStore.loadAll()
+  const isWorldQuestion = (question) => {
+    const normalizedQuestion = question.replaceAll(' ', '')
+    return (
+      worldQuestionKeywords.some((keyword) =>
+        normalizedQuestion.includes(keyword),
+      ) ||
+      worldCityDefinitions.some((city) =>
+        normalizedQuestion.includes(city.name),
+      )
+    )
+  }
+
+  const filterByContinent = (question, weatherList) => {
+    const continent = worldQuestionKeywords
+      .slice(3)
+      .find((keyword) => question.includes(keyword))
+
+    return continent
+      ? weatherList.filter((city) => city.continent === continent)
+      : weatherList
+  }
+
+  const getWorldScopeLabel = (question) => {
+    const normalizedQuestion = question.replaceAll(' ', '')
+    const continent = worldQuestionKeywords
+      .slice(3)
+      .find((keyword) => normalizedQuestion.includes(keyword))
+
+    return continent ? `${continent} 주요 도시` : '세계 주요 도시'
+  }
+
+  const ensureWeatherData = async (scope) => {
+    if (scope === 'world') {
+      if (worldWeatherStore.weatherList.length === 0) {
+        await worldWeatherStore.loadAll()
+      }
+      return worldWeatherStore.weatherList
     }
+
+    if (weatherStore.weatherList.length === 0) await weatherStore.loadAll()
     return weatherStore.weatherList
+  }
+
+  const getMemberResponse = (question) => {
+    const normalizedQuestion = question.replaceAll(' ', '')
+    const asksAboutMember =
+      normalizedQuestion.includes('회원정보') ||
+      normalizedQuestion.includes('내정보') ||
+      normalizedQuestion.includes('가입정보') ||
+      normalizedQuestion.includes('계정정보')
+    const asksAboutSignUp = normalizedQuestion.includes('회원가입')
+
+    if (!asksAboutMember && !asksAboutSignUp) return null
+
+    if (!memberStore.member) {
+      return {
+        text: '아직 등록된 회원 정보가 없어요. 회원가입 화면에서 이름과 관심 도시를 등록해 주세요.',
+        action: { label: '회원가입하기', to: '/signup' },
+      }
+    }
+
+    return {
+      text: `${memberStore.member.name}님의 이메일은 ${memberStore.member.email}, 관심 도시는 ${memberStore.member.favoriteCity}로 등록되어 있어요.`,
+      action: { label: '회원정보 확인', to: '/signup' },
+    }
+  }
+
+  const getFavoriteCityQuestion = (question) => {
+    const normalizedQuestion = question.replaceAll(' ', '')
+    const asksFavoriteCity =
+      normalizedQuestion.includes('관심도시') ||
+      normalizedQuestion.includes('내도시')
+
+    if (!asksFavoriteCity) return { question }
+    if (!memberStore.member) {
+      return {
+        response: {
+          text: '관심 도시를 이용하려면 먼저 회원가입 화면에서 도시를 등록해 주세요.',
+          action: { label: '관심 도시 등록', to: '/signup' },
+        },
+      }
+    }
+
+    return {
+      question: `${memberStore.member.favoriteCity} ${question}`,
+    }
+  }
+
+  const pushAssistantMessage = ({ text, action }) => {
+    messages.value.push({
+      id: Date.now() + Math.random(),
+      role: 'assistant',
+      text,
+      action,
+    })
   }
 
   const sendMessage = async (messageText = draft.value) => {
@@ -163,22 +281,55 @@ export const useWeatherAssistant = () => {
     isThinking.value = true
 
     try {
-      const weatherList = await ensureWeatherData()
+      const memberResponse = getMemberResponse(question)
+      if (memberResponse) {
+        await new Promise((resolve) => setTimeout(resolve, 240))
+        pushAssistantMessage(memberResponse)
+        return
+      }
+
+      const favoriteCityQuestion = getFavoriteCityQuestion(question)
+      if (favoriteCityQuestion.response) {
+        await new Promise((resolve) => setTimeout(resolve, 240))
+        pushAssistantMessage(favoriteCityQuestion.response)
+        return
+      }
+
+      const resolvedQuestion = favoriteCityQuestion.question
+      const scope = isWorldQuestion(resolvedQuestion) ? 'world' : 'domestic'
+      let weatherList = await ensureWeatherData(scope)
+
+      if (scope === 'world') {
+        weatherList = filterByContinent(
+          resolvedQuestion.replaceAll(' ', ''),
+          weatherList,
+        )
+      }
+
       await new Promise((resolve) => setTimeout(resolve, 380))
 
-      const answer = weatherList.length
-        ? buildAnswer(question, weatherList)
-        : '날씨 데이터를 불러오지 못했어요. API 설정과 네트워크 연결을 확인한 뒤 다시 질문해 주세요.'
+      if (!weatherList.length) {
+        pushAssistantMessage({
+          text: '날씨 데이터를 불러오지 못했어요. API 설정과 네트워크 연결을 확인한 뒤 다시 질문해 주세요.',
+        })
+        return
+      }
 
-      messages.value.push({
-        id: Date.now() + 1,
-        role: 'assistant',
-        text: answer,
+      pushAssistantMessage({
+        text: buildAnswer(
+          resolvedQuestion,
+          weatherList,
+          scope === 'world'
+            ? getWorldScopeLabel(resolvedQuestion)
+            : '국내 주요 도시',
+        ),
+        action:
+          scope === 'world'
+            ? { label: '세계 날씨 한눈에 보기', to: '/world' }
+            : undefined,
       })
     } catch {
-      messages.value.push({
-        id: Date.now() + 1,
-        role: 'assistant',
+      pushAssistantMessage({
         text: '날씨 데이터를 불러오는 중 문제가 생겼어요. 잠시 후 다시 시도해 주세요.',
       })
     } finally {
@@ -187,8 +338,20 @@ export const useWeatherAssistant = () => {
   }
 
   const clearConversation = () => {
-    messages.value = [{ ...initialMessage, id: Date.now() }]
+    messages.value = [createInitialMessage(memberStore.member)]
   }
+
+  watch(
+    () => memberStore.member?.joinedAt,
+    (joinedAt, previousJoinedAt) => {
+      if (!joinedAt || joinedAt === previousJoinedAt) return
+
+      pushAssistantMessage({
+        text: `${memberStore.member.name}님, 회원가입이 완료됐어요. 이제 “내 관심 도시 날씨”라고 물으면 ${memberStore.member.favoriteCity}의 날씨를 알려드릴게요.`,
+        action: { label: '세계 날씨 둘러보기', to: '/world' },
+      })
+    },
+  )
 
   return {
     messages,

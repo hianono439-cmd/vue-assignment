@@ -2,6 +2,8 @@
 import { computed, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { cityDefinitions } from '../data/weather'
+import { worldCityDefinitions } from '../data/worldCities'
 import { useMemberStore } from '../stores/memberStore'
 
 const router = useRouter()
@@ -10,19 +12,15 @@ const formRef = ref(null)
 const isSubmitting = ref(false)
 const isCompleted = ref(memberStore.isRegistered)
 
-const cityOptions = [
-  '서울',
-  '수원',
-  '부산',
-  '인천',
-  '대전',
-  '대구',
-  '광주',
-  '제주',
-  '도쿄',
-  '런던',
-  '뉴욕',
-  '시드니',
+const cityOptionGroups = [
+  {
+    label: '국내 주요 도시',
+    cities: cityDefinitions.map((city) => city.name),
+  },
+  {
+    label: '세계 주요 도시',
+    cities: worldCityDefinitions.map((city) => city.name),
+  },
 ]
 
 const form = reactive({
@@ -152,14 +150,6 @@ const registerAgain = () => {
     </div>
 
     <el-card v-if="!isCompleted" class="signup-card" shadow="never">
-      <el-alert
-        title="Element Plus 폼 검증 실습"
-        description="실습용 화면이므로 서버로 전송하지 않으며 비밀번호도 저장하지 않습니다."
-        type="info"
-        show-icon
-        :closable="false"
-      />
-
       <el-form
         ref="formRef"
         class="signup-form"
@@ -220,12 +210,18 @@ const registerAgain = () => {
             filterable
             placeholder="도시를 선택해 주세요"
           >
-            <el-option
-              v-for="city in cityOptions"
-              :key="city"
-              :label="city"
-              :value="city"
-            />
+            <el-option-group
+              v-for="group in cityOptionGroups"
+              :key="group.label"
+              :label="group.label"
+            >
+              <el-option
+                v-for="city in group.cities"
+                :key="city"
+                :label="city"
+                :value="city"
+              />
+            </el-option-group>
           </el-select>
         </el-form-item>
 

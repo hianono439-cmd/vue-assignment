@@ -1,11 +1,15 @@
 <script setup>
 import { nextTick, ref, watch } from 'vue'
 import { AnimatePresence, motion } from 'motion-v'
+import { RouterLink } from 'vue-router'
 import { useWeatherAssistant } from '../../composables/useWeatherAssistant'
+import { useMemberStore } from '../../stores/memberStore'
 
 const isOpen = ref(false)
 const messageList = ref(null)
+const suggestionList = ref(null)
 const inputElement = ref(null)
+const memberStore = useMemberStore()
 const {
   messages,
   draft,
@@ -34,6 +38,19 @@ const closeAssistant = () => {
 
 const askSuggestedQuestion = (question) => {
   sendMessage(question)
+}
+
+const keepSuggestionScrollInPanel = (event) => {
+  if (!suggestionList.value) return
+
+  const isHorizontalGesture =
+    Math.abs(event.deltaX) > Math.abs(event.deltaY) ||
+    (event.shiftKey && Math.abs(event.deltaY) > 0)
+
+  if (!isHorizontalGesture) return
+
+  event.preventDefault()
+  suggestionList.value.scrollLeft += event.deltaX || event.deltaY
 }
 
 watch(
@@ -65,7 +82,9 @@ watch(
               aria-hidden="true"
             >✨</motion.span>
             <div>
-              <p>실시간 날씨 분석</p>
+              <p>
+                {{ memberStore.member ? `${memberStore.member.name}님 맞춤 안내` : '국내외 날씨 안내' }}
+              </p>
               <h2 id="assistant-heading">날씨 도우미</h2>
             </div>
           </div>
@@ -77,7 +96,7 @@ watch(
 
         <div class="privacy-note">
           <span aria-hidden="true"></span>
-          현재 날씨 데이터 분석형 · 대화 외부 전송 없음
+          국내외 날씨·회원정보 연동 · 대화 외부 전송 없음
         </div>
 
         <div ref="messageList" class="message-list" aria-live="polite">
@@ -90,7 +109,17 @@ watch(
             :animate="{ opacity: 1, y: 0 }"
           >
             <span v-if="message.role === 'assistant'" aria-hidden="true">봇</span>
-            <p>{{ message.text }}</p>
+            <p>
+              {{ message.text }}
+              <RouterLink
+                v-if="message.action"
+                class="message-action"
+                :to="message.action.to"
+                @click="closeAssistant"
+              >
+                {{ message.action.label }} <span aria-hidden="true">→</span>
+              </RouterLink>
+            </p>
           </motion.div>
 
           <div v-if="isThinking" class="typing-message" aria-label="답변 작성 중">
@@ -98,7 +127,12 @@ watch(
           </div>
         </div>
 
-        <div class="suggestion-list" aria-label="추천 질문">
+        <div
+          ref="suggestionList"
+          class="suggestion-list"
+          aria-label="추천 질문"
+          @wheel="keepSuggestionScrollInPanel"
+        >
           <button
             v-for="question in suggestedQuestions"
             :key="question"
@@ -304,6 +338,28 @@ watch(
   background: #347da8;
 }
 
+.message-action {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  padding: 6px 8px;
+  border: 1px solid #c5dce9;
+  border-radius: 8px;
+  color: #286b91;
+  background: rgb(255 255 255 / 72%);
+  font-size: 0.63rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.message-action:hover {
+  border-color: #78b8d5;
+  background: #ffffff;
+}
+
 .typing-message {
   display: flex;
   width: fit-content;
@@ -339,6 +395,7 @@ watch(
   gap: 6px;
   padding: 9px 13px;
   border-top: 1px solid #e3edf4;
+  overscroll-behavior-x: contain;
   scrollbar-width: none;
 }
 

@@ -13,6 +13,12 @@
   box-sizing: border-box;
 }
 
+html,
+body,
+#app {
+  overscroll-behavior-x: none;
+}
+
 body {
   min-width: 320px;
   min-height: 100vh;
