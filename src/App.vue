@@ -5,6 +5,8 @@ import UnitToggler from './components/exercise/UnitToggler.vue'
 import WeatherAssistant from './components/exercise/WeatherAssistant.vue'
 
 const { scrollYProgress } = useScroll()
+
+// 스크롤 위치에 따라 배경 원이 서로 다른 방향으로 천천히 움직인다.
 const upperOrbY = useTransform(scrollYProgress, [0, 1], [0, 170])
 const lowerOrbY = useTransform(scrollYProgress, [0, 1], [0, -130])
 </script>

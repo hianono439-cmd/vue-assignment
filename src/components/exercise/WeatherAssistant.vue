@@ -19,6 +19,7 @@ const {
   clearConversation,
 } = useWeatherAssistant()
 
+// 새 답변이 추가되면 대화창의 마지막 메시지까지 자동으로 내린다.
 const scrollToLatestMessage = async () => {
   await nextTick()
   if (messageList.value) {
@@ -40,17 +41,20 @@ const askSuggestedQuestion = (question) => {
   sendMessage(question)
 }
 
+// 세로 마우스 휠과 가로 트랙패드 입력을 모두 추천 질문의 가로 이동으로 바꾼다.
 const keepSuggestionScrollInPanel = (event) => {
   if (!suggestionList.value) return
 
-  const isHorizontalGesture =
-    Math.abs(event.deltaX) > Math.abs(event.deltaY) ||
-    (event.shiftKey && Math.abs(event.deltaY) > 0)
+  const wheelDistance =
+    Math.abs(event.deltaX) > Math.abs(event.deltaY)
+      ? event.deltaX
+      : event.deltaY
 
-  if (!isHorizontalGesture) return
+  if (!wheelDistance) return
 
   event.preventDefault()
-  suggestionList.value.scrollLeft += event.deltaX || event.deltaY
+  event.stopPropagation()
+  suggestionList.value.scrollLeft += wheelDistance
 }
 
 watch(
@@ -395,7 +399,7 @@ watch(
   gap: 6px;
   padding: 9px 13px;
   border-top: 1px solid #e3edf4;
-  overscroll-behavior-x: contain;
+  overscroll-behavior: contain;
   scrollbar-width: none;
 }
 

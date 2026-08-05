@@ -26,6 +26,7 @@ const formattedLastUpdated = computed(() => {
   }).format(new Date(weatherStore.lastUpdated))
 })
 
+// 도시명 뒤에 붙는 '이/가'를 받침 유무에 맞게 결정한다.
 const getSubjectParticle = (word) => {
   const normalizedWord = word?.trim()
   if (!normalizedWord) return ''
@@ -41,6 +42,8 @@ const getSubjectParticle = (word) => {
 }
 
 const trimmedSearchQuery = computed(() => searchQuery.value.trim())
+
+// 검색어가 비어 있으면 전체 도시를, 입력되면 일치하는 도시만 반환한다.
 const filteredWeatherList = computed(() => {
   if (!trimmedSearchQuery.value) {
     return weatherList.value
@@ -64,10 +67,12 @@ const loadWeather = async (force = false) => {
   }
 }
 
+// 화면에 처음 들어왔을 때 전체 도시 날씨를 불러온다.
 onMounted(() => {
   loadWeather()
 })
 
+// 선택 도시가 바뀌는 순간 이전 값과 새 값을 확인한다.
 watch(selectedCityInfo, (newCityInfo, oldCityInfo) => {
   if (!newCityInfo) return
 
@@ -82,6 +87,7 @@ watch(selectedCityInfo, (newCityInfo, oldCityInfo) => {
   )
 })
 
+// 검색어 또는 필터 결과가 달라질 때마다 검색 상태를 확인한다.
 watchEffect(() => {
   const query = trimmedSearchQuery.value
   const matchedCities = filteredWeatherList.value.map((city) => city.name)
