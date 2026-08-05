@@ -46,7 +46,7 @@ const lowerOrbY = useTransform(scrollYProgress, [0, 1], [0, -130])
             >🌤️</motion.span>
             <div>
               <h1 id="page-title">날씨 대시보드</h1>
-              <p class="subtitle">국내외 주요 도시의 날씨를 한눈에 확인해 보세요.</p>
+              <p class="subtitle">국내외 주요 도시의 현재 날씨를 확인해 보세요.</p>
             </div>
           </div>
 

@@ -102,8 +102,8 @@ onMounted(() => loadWorldWeather())
     >
       <div>
         <p>세계 주요 도시 현재 날씨</p>
-        <h2 id="world-heading">세계 날씨 한눈에 보기</h2>
-        <span>6개 대륙 12개 도시의 현재 관측 정보를 비교해 보세요.</span>
+        <h2 id="world-heading">세계 주요 도시 날씨</h2>
+        <span>6개 대륙 12개 도시의 현재 날씨를 비교할 수 있습니다.</span>
       </div>
       <el-button
         type="primary"

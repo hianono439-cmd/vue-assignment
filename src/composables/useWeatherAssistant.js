@@ -9,8 +9,8 @@ const createInitialMessage = (member) => ({
   id: Date.now(),
   role: 'assistant',
   text: member
-    ? `${member.name}님, 안녕하세요. 관심 도시인 ${member.favoriteCity} 날씨나 세계 주요 도시의 날씨를 물어보세요.`
-    : '안녕하세요. 국내외 도시 날씨를 알려드릴게요. 회원가입을 하면 관심 도시도 기억할 수 있어요.',
+    ? `${member.name}님, ${member.favoriteCity} 날씨부터 확인해 볼까요? 다른 도시도 검색할 수 있습니다.`
+    : '궁금한 도시와 함께 날씨, 우산, 옷차림을 입력해 보세요.',
 })
 
 const worldQuestionKeywords = [
@@ -48,13 +48,13 @@ const subject = (word) => `${word}${hasFinalConsonant(word) ? '이' : '가'}`
 const copula = (word) => `${word}${hasFinalConsonant(word) ? '이에요' : '예요'}`
 
 const getOutfitAdvice = (temperature) => {
-  if (temperature >= 28) return '민소매나 반팔처럼 가벼운 옷과 자외선 차단 용품이 좋아요.'
-  if (temperature >= 23) return '반팔이나 얇은 셔츠가 잘 맞아요.'
-  if (temperature >= 20) return '얇은 긴팔이나 가벼운 가디건을 챙겨 보세요.'
-  if (temperature >= 17) return '맨투맨이나 얇은 재킷이 적당해요.'
-  if (temperature >= 12) return '재킷이나 니트처럼 보온되는 겉옷이 필요해요.'
-  if (temperature >= 5) return '코트와 따뜻한 니트를 추천해요.'
-  return '두꺼운 외투와 목도리, 장갑으로 따뜻하게 입으세요.'
+  if (temperature >= 28) return '반팔처럼 가벼운 옷과 자외선 차단 용품이 필요합니다.'
+  if (temperature >= 23) return '반팔이나 얇은 셔츠가 적당합니다.'
+  if (temperature >= 20) return '얇은 긴팔이나 가디건을 챙기세요.'
+  if (temperature >= 17) return '맨투맨이나 얇은 재킷이 적당합니다.'
+  if (temperature >= 12) return '재킷이나 니트가 필요합니다.'
+  if (temperature >= 5) return '코트와 따뜻한 니트를 챙기세요.'
+  return '두꺼운 외투와 목도리, 장갑이 필요합니다.'
 }
 
 const needsUmbrella = (city) =>
@@ -105,8 +105,8 @@ export const useWeatherAssistant = () => {
 
     if (question.includes('우산') || question.includes('비')) {
       return needsUmbrella(city)
-        ? `${topic(city.name)} ${city.status} 상태라 우산을 챙기는 편이 좋아요.`
-        : `${topic(city.name)} 현재 ${city.status}이라 비 소식은 보이지 않아요. 그래도 장시간 외출이라면 최신 예보를 한 번 더 확인해 주세요.`
+        ? `${topic(city.name)} 현재 ${city.status}입니다. 우산을 챙기세요.`
+        : `${topic(city.name)} 현재 ${city.status}이며 비는 관측되지 않았습니다.`
     }
 
     if (question.includes('습도')) {
@@ -133,7 +133,7 @@ export const useWeatherAssistant = () => {
       const hottest = weatherList.reduce((current, item) =>
         item.temp > current.temp ? item : current,
       )
-      return `${scopeLabel} 중 지금 가장 더운 곳은 ${copula(hottest.name)}. 현재 기온은 ${formatTemperature(hottest.temp)}, 날씨는 ${hottest.status}입니다.`
+      return `${scopeLabel} 중 기온이 가장 높은 곳은 ${copula(hottest.name)}. 현재 ${formatTemperature(hottest.temp)}, ${hottest.status}입니다.`
     }
 
     if (
@@ -144,7 +144,7 @@ export const useWeatherAssistant = () => {
       const coldest = weatherList.reduce((current, item) =>
         item.temp < current.temp ? item : current,
       )
-      return `${scopeLabel} 중 지금 기온이 가장 낮은 곳은 ${copula(coldest.name)}. 현재 ${formatTemperature(coldest.temp)}입니다.`
+      return `${scopeLabel} 중 기온이 가장 낮은 곳은 ${copula(coldest.name)}. 현재 ${formatTemperature(coldest.temp)}입니다.`
     }
 
     if (normalizedQuestion.includes('우산') || normalizedQuestion.includes('비오는')) {
@@ -172,14 +172,14 @@ export const useWeatherAssistant = () => {
       const averageTemperature =
         weatherList.reduce((sum, item) => sum + item.temp, 0) /
         weatherList.length
-      return `${scopeLabel}의 평균 기온은 약 ${formatTemperature(Math.round(averageTemperature))}예요. ${getOutfitAdvice(averageTemperature)} 도시 이름을 함께 말하면 더 정확히 알려드릴게요.`
+      return `${scopeLabel}의 평균 기온은 약 ${formatTemperature(Math.round(averageTemperature))}예요. ${getOutfitAdvice(averageTemperature)} 도시 이름을 함께 입력하면 해당 지역을 확인할 수 있습니다.`
     }
 
     if (normalizedQuestion.includes('도시') || normalizedQuestion.includes('전체')) {
       return `${scopeLabel}에서는 ${weatherList.map((item) => item.name).join(', ')}의 날씨를 확인할 수 있어요. 궁금한 도시 이름을 말해 주세요.`
     }
 
-    return '국내외 도시 이름과 함께 “날씨”, “옷차림”, “우산”을 물어보거나, “세계에서 가장 더운 도시”처럼 질문해 보세요.'
+    return '도시 이름과 함께 날씨, 옷차림, 우산 중 궁금한 내용을 입력해 주세요.'
   }
 
   const isWorldQuestion = (question) => {
@@ -238,7 +238,7 @@ export const useWeatherAssistant = () => {
 
     if (!memberStore.member) {
       return {
-        text: '아직 등록된 회원 정보가 없어요. 회원가입 화면에서 이름과 관심 도시를 등록해 주세요.',
+        text: '저장된 회원 정보가 없습니다. 회원가입 화면에서 이름과 관심 도시를 등록할 수 있습니다.',
         action: { label: '회원가입하기', to: '/signup' },
       }
     }
@@ -264,7 +264,7 @@ export const useWeatherAssistant = () => {
       : ''
 
     return {
-      text: `${greeting}출발 위치와 운전시간을 설정하면 현재 진행 중인 행사 중 날씨가 괜찮은 곳을 추천해 드릴게요.`,
+      text: `${greeting}출발 위치와 운전시간을 설정하면 현재 진행 중인 행사와 현지 날씨를 함께 확인할 수 있습니다.`,
       action: { label: '나들이 추천받기', to: '/outings' },
     }
   }
@@ -279,7 +279,7 @@ export const useWeatherAssistant = () => {
     if (!memberStore.member) {
       return {
         response: {
-          text: '관심 도시를 이용하려면 먼저 회원가입 화면에서 도시를 등록해 주세요.',
+          text: '관심 도시가 등록되지 않았습니다. 회원가입 화면에서 도시를 선택해 주세요.',
           action: { label: '관심 도시 등록', to: '/signup' },
         },
       }
@@ -363,7 +363,7 @@ export const useWeatherAssistant = () => {
         ),
         action:
           scope === 'world'
-            ? { label: '세계 날씨 한눈에 보기', to: '/world' }
+            ? { label: '세계 날씨 보기', to: '/world' }
             : undefined,
       })
     } catch {
@@ -385,7 +385,7 @@ export const useWeatherAssistant = () => {
       if (!joinedAt || joinedAt === previousJoinedAt) return
 
       pushAssistantMessage({
-        text: `${memberStore.member.name}님, 회원가입이 완료됐어요. 이제 “내 관심 도시 날씨”라고 물으면 ${memberStore.member.favoriteCity}의 날씨를 알려드릴게요.`,
+        text: `${memberStore.member.name}님의 관심 도시가 ${memberStore.member.favoriteCity}로 저장되었습니다. “내 관심 도시 날씨”라고 입력해 보세요.`,
         action: { label: '세계 날씨 둘러보기', to: '/world' },
       })
     },

@@ -8,19 +8,19 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
     <div class="view-heading">
       <span aria-hidden="true">ⓘ</span>
       <div>
-        <p>날씨 서비스 소개</p>
-        <h2 id="about-heading">서비스 소개</h2>
+        <p>서비스 안내</p>
+        <h2 id="about-heading">날씨 대시보드 소개</h2>
       </div>
     </div>
 
     <BaseDashboardCard
-      title="날씨 대시보드를 소개합니다"
+      title="주요 기능"
       icon="🌤️"
       heading-id="about-service-heading"
     >
       <p class="intro">
-        OpenWeatherMap의 실시간 관측 데이터를 이용해 전국 주요 도시의 현재
-        날씨와 상세 기상 정보를 확인할 수 있는 대시보드입니다.
+        OpenWeatherMap 관측 정보를 불러와 국내 주요 도시의 현재 날씨와 상세
+        정보를 보여줍니다.
       </p>
 
       <ul class="feature-list">
@@ -28,21 +28,21 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
           <span aria-hidden="true">🔎</span>
           <div>
             <strong>도시 검색</strong>
-            <p>도시 이름을 입력하면 일치하는 카드만 바로 확인할 수 있습니다.</p>
+            <p>도시 이름으로 원하는 날씨 카드를 찾을 수 있습니다.</p>
           </div>
         </li>
         <li>
           <span aria-hidden="true">🌐</span>
           <div>
-            <strong>실시간 날씨 연동</strong>
-            <p>날씨 제공 서비스에서 현재 관측 정보를 불러옵니다.</p>
+            <strong>현재 날씨</strong>
+            <p>각 도시의 기온과 습도, 바람 정보를 표시합니다.</p>
           </div>
         </li>
         <li>
           <span aria-hidden="true">🧭</span>
           <div>
-            <strong>라우터 화면 이동</strong>
-            <p>메인·상세·소개 화면을 편하게 이동할 수 있습니다.</p>
+            <strong>페이지 이동</strong>
+            <p>날씨 카드에서 도시별 상세 화면으로 이동할 수 있습니다.</p>
           </div>
         </li>
       </ul>

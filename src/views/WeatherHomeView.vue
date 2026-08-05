@@ -75,10 +75,10 @@ watch(selectedCityInfo, (newCityInfo, oldCityInfo) => {
   const statusMessage = `${newCityInfo.name}${getSubjectParticle(newCityInfo.name)} 선택되었습니다.`
 
   console.log(
-    `👁️ [watch 감지] 선택 도시가 [${oldCityName}]에서 [${newCityInfo.name}]로 변경됨.`,
+    `[watch] 선택 도시: ${oldCityName} → ${newCityInfo.name}`,
   )
   console.log(
-    `🟢 [watch 감지] 상태 바 문구가 업데이트되었습니다 -> "${statusMessage}"`,
+    `[watch] 안내 문구: ${statusMessage}`,
   )
 })
 
@@ -88,20 +88,20 @@ watchEffect(() => {
 
   if (!query) {
     console.log(
-      `🔎 [watchEffect 자동 호출] 검색어가 비어 있어 전체 ${matchedCities.length}개 도시를 표시합니다.`,
+      `[watchEffect] 전체 ${matchedCities.length}개 도시 표시`,
     )
     return
   }
 
   if (matchedCities.length > 0) {
     console.log(
-      `🔎 [watchEffect 자동 호출] 현재 검색어 '${query}'에 매칭되는 API 데이터: ${matchedCities.join(', ')}`,
+      `[watchEffect] '${query}' 검색 결과: ${matchedCities.join(', ')}`,
     )
     return
   }
 
   console.log(
-    `🔎 [watchEffect 자동 호출] 현재 검색어 '${query}'에 매칭되는 도시가 없습니다.`,
+    `[watchEffect] '${query}' 검색 결과 없음`,
   )
 })
 

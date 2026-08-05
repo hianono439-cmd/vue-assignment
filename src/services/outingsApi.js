@@ -203,23 +203,23 @@ const getWeatherScore = (weather, isIndoor) => {
 }
 
 const getWeatherReason = (weather, isIndoor) => {
-  if (!weather) return '현지 날씨를 확인하지 못해 이동거리 위주로 추천했어요.'
+  if (!weather) return '현지 날씨를 확인하지 못해 이동시간을 기준으로 정렬했습니다.'
   if (hasRainOrSnow(weather) && isIndoor) {
-    return '비나 눈이 예상되지만 실내에서 즐길 수 있는 일정이에요.'
+    return '비나 눈이 예상되는 날에 방문하기 좋은 실내 행사입니다.'
   }
   if (hasRainOrSnow(weather)) {
     return '비나 눈 소식이 있어 우산과 미끄럽지 않은 신발을 준비하세요.'
   }
   if (weather.temp >= 17 && weather.temp <= 27 && weather.windSpeed < 8) {
-    return '기온과 바람이 무난해 나들이하기 좋은 날씨예요.'
+    return '기온과 바람이 무난한 편입니다.'
   }
   if (weather.temp > 27) {
     return isIndoor
-      ? '더운 날씨를 피해 실내에서 즐기기 좋아요.'
+      ? '더위를 피할 수 있는 실내 행사입니다.'
       : '더운 날씨라 물과 자외선 차단 용품을 챙기세요.'
   }
   return isIndoor
-    ? '쌀쌀한 날씨에도 실내에서 편하게 즐길 수 있어요.'
+    ? '기온이 낮아도 이용하기 편한 실내 행사입니다.'
     : '다소 쌀쌀할 수 있으니 가벼운 겉옷을 준비하세요.'
 }
 

@@ -183,7 +183,6 @@ watch(selectedOriginId, (cityId) => {
   try {
     localStorage.setItem(originStorageKey, cityId)
   } catch {
-    // 브라우저 저장을 사용할 수 없어도 현재 화면의 선택은 유지합니다.
   }
 })
 
@@ -203,7 +202,7 @@ onMounted(() => {
       <div>
         <p>오늘 어디 갈까?</p>
         <h2 id="outing-heading">날씨 맞춤 나들이 추천</h2>
-        <span>현재 진행 중인 행사 중 차로 2시간 안에 갈 수 있는 곳을 찾아드려요.</span>
+        <span>현재 진행 중인 행사 중 차로 2시간 안에 갈 수 있는 곳을 찾습니다.</span>
       </div>
       <span class="outing-hero__icon" aria-hidden="true">🚗</span>
     </motion.div>

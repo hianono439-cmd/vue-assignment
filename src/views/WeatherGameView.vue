@@ -148,8 +148,8 @@ onMounted(startGame)
     >
       <div>
         <span class="game-eyebrow">오늘의 날씨 퀴즈</span>
-        <h2 id="game-heading">오늘의 날씨 수사대</h2>
-        <p>실시간 기상 단서를 보고 숨어 있는 도시를 맞혀 보세요.</p>
+        <h2 id="game-heading">도시 날씨 퀴즈</h2>
+        <p>기온과 습도, 날씨 상태를 보고 도시를 맞혀 보세요.</p>
       </div>
       <div class="high-score">
         <small>최고 점수</small>
@@ -168,7 +168,7 @@ onMounted(startGame)
           :transition="{ duration: 1, repeat: Infinity, ease: 'linear' }"
           aria-hidden="true"
         >🌤️</motion.span>
-        <strong>실시간 날씨 단서를 준비하고 있습니다.</strong>
+        <strong>문제를 준비하고 있습니다.</strong>
       </div>
 
       <div v-else-if="gameError" class="game-state game-state--error" role="alert">
@@ -194,16 +194,16 @@ onMounted(startGame)
           >{{ score >= 80 ? '🏆' : score >= 60 ? '🎉' : '🕵️' }}</motion.span>
           <small>5라운드 완료</small>
           <strong>{{ score }}점</strong>
-          <p v-if="score === 100">완벽합니다! 오늘의 날씨를 모두 알아맞혔어요.</p>
-          <p v-else-if="score >= 60">훌륭해요! 날씨 수사대의 감각이 아주 좋습니다.</p>
-          <p v-else>조금 어려웠죠? 날씨 카드를 살펴보고 다시 도전해 보세요.</p>
+          <p v-if="score === 100">5문제를 모두 맞혔습니다.</p>
+          <p v-else-if="score >= 60">좋은 점수입니다. 한 번 더 풀어보세요.</p>
+          <p v-else>날씨 카드를 확인한 후 다시 풀어보세요.</p>
           <motion.button
             type="button"
             :while-hover="{ y: -2, scale: 1.02 }"
             :while-press="{ scale: 0.95 }"
             @click="startGame"
           >
-            새로운 문제로 다시 도전
+            다시 풀기
           </motion.button>
         </motion.div>
 
@@ -290,12 +290,12 @@ onMounted(startGame)
             <div>
               <span aria-hidden="true">{{ isCorrect ? '✓' : '!' }}</span>
               <p>
-                <strong>{{ isCorrect ? '정답입니다!' : '아쉽지만 오답이에요.' }}</strong>
+                <strong>{{ isCorrect ? '정답입니다.' : '오답입니다.' }}</strong>
                 정답은 {{ currentQuestion.answer.name }}입니다.
               </p>
             </div>
             <button type="button" @click="goToNextRound">
-              {{ currentRound === questions.length ? '결과 보기' : '다음 단서' }} →
+              {{ currentRound === questions.length ? '결과 보기' : '다음 문제' }} →
             </button>
           </motion.div>
         </motion.div>
