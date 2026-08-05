@@ -9,7 +9,7 @@ import { RouterLink } from 'vue-router'
         <span>☀️</span>
         <strong>?</strong>
       </div>
-      <p class="error-code">404 · LOST IN THE CLOUDS</p>
+      <p class="error-code">404 · 페이지를 찾을 수 없음</p>
       <h2 id="not-found-heading">페이지를 찾을 수 없습니다.</h2>
       <p class="description">
         요청하신 주소가 존재하지 않거나, 아직 개발되지 않은 페이지입니다.

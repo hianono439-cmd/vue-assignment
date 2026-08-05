@@ -8,7 +8,7 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
     <div class="view-heading">
       <span aria-hidden="true">ⓘ</span>
       <div>
-        <p>ABOUT THIS SERVICE</p>
+        <p>날씨 서비스 소개</p>
         <h2 id="about-heading">서비스 소개</h2>
       </div>
     </div>
@@ -20,7 +20,7 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
     >
       <p class="intro">
         OpenWeatherMap의 실시간 관측 데이터를 이용해 전국 주요 도시의 현재
-        날씨와 상세 기상 정보를 확인할 수 있는 Vue 3 기반 대시보드입니다.
+        날씨와 상세 기상 정보를 확인할 수 있는 대시보드입니다.
       </p>
 
       <ul class="feature-list">
@@ -35,27 +35,17 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
           <span aria-hidden="true">🌐</span>
           <div>
             <strong>실시간 날씨 연동</strong>
-            <p>Axios로 OpenWeatherMap의 현재 관측 데이터를 불러옵니다.</p>
+            <p>날씨 제공 서비스에서 현재 관측 정보를 불러옵니다.</p>
           </div>
         </li>
         <li>
           <span aria-hidden="true">🧭</span>
           <div>
             <strong>라우터 화면 이동</strong>
-            <p>Vue Router로 메인·상세·소개·404 페이지를 연결했습니다.</p>
+            <p>메인·상세·소개 화면을 편하게 이동할 수 있습니다.</p>
           </div>
         </li>
       </ul>
-
-      <div class="tech-stack" aria-label="사용 기술">
-        <span>Vue 3</span>
-        <span>Composition API</span>
-        <span>Vue Router</span>
-        <span>Pinia</span>
-        <span>Axios</span>
-        <span>OpenWeatherMap</span>
-        <span>Scoped CSS</span>
-      </div>
     </BaseDashboardCard>
 
     <RouterLink class="home-link" to="/">
@@ -143,22 +133,6 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
   color: #71869a;
   font-size: 0.74rem;
   line-height: 1.6;
-}
-
-.tech-stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-top: 18px;
-}
-
-.tech-stack span {
-  padding: 6px 10px;
-  border-radius: 999px;
-  color: #287da8;
-  background: #e9f7fd;
-  font-size: 0.68rem;
-  font-weight: 750;
 }
 
 .home-link {

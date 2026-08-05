@@ -62,7 +62,7 @@ const goHome = () => {
       <div class="view-heading">
         <span class="view-heading__icon" aria-hidden="true">{{ weatherIcon }}</span>
         <div>
-          <p>WEATHER OBSERVATION</p>
+          <p>실시간 기상 관측</p>
           <h2 id="detail-heading">{{ cityDefinition.name }} 상세 날씨</h2>
         </div>
       </div>
@@ -150,7 +150,7 @@ const goHome = () => {
 
     <div v-else class="unknown-city" role="alert">
       <span aria-hidden="true">🧭</span>
-      <p>UNKNOWN CITY</p>
+      <p>등록되지 않은 도시</p>
       <h2 id="detail-heading">도시 정보를 찾을 수 없습니다.</h2>
       <p>요청한 도시 코드와 일치하는 날씨 데이터가 없습니다.</p>
     </div>

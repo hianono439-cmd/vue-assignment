@@ -5,7 +5,7 @@ import { useWeatherStore } from '../stores/weatherStore'
 const initialMessage = {
   id: 1,
   role: 'assistant',
-  text: '안녕하세요! 실시간 날씨를 분석하는 도우미예요. 도시 날씨, 우산, 옷차림이나 가장 덥고 습한 도시를 물어보세요.',
+  text: '안녕하세요. 궁금한 도시의 날씨나 옷차림, 우산이 필요한지 물어보세요.',
 }
 
 const hasFinalConsonant = (word = '') => {

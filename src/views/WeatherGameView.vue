@@ -147,7 +147,7 @@ onMounted(startGame)
       :transition="{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }"
     >
       <div>
-        <span class="game-eyebrow">LIVE WEATHER MINI GAME</span>
+        <span class="game-eyebrow">오늘의 날씨 퀴즈</span>
         <h2 id="game-heading">오늘의 날씨 수사대</h2>
         <p>실시간 기상 단서를 보고 숨어 있는 도시를 맞혀 보세요.</p>
       </div>
@@ -217,7 +217,7 @@ onMounted(startGame)
           :transition="{ duration: 0.32 }"
         >
           <div class="round-status">
-            <span>ROUND {{ currentRound }} / {{ questions.length }}</span>
+            <span>{{ currentRound }}번째 문제 / {{ questions.length }}</span>
             <strong>{{ score }}점</strong>
           </div>
           <div class="progress-track" aria-hidden="true">
@@ -228,7 +228,7 @@ onMounted(startGame)
             <div v-if="isAnswered && isCorrect" class="confetti" aria-hidden="true">
               <i v-for="index in 12" :key="index"></i>
             </div>
-            <span class="mystery-label">CITY NAME: ???</span>
+            <span class="mystery-label">도시 이름은 비밀</span>
             <div class="weather-clue">
               <motion.span
                 :animate="{ y: [0, -6, 0] }"

@@ -65,13 +65,13 @@ watch(
               aria-hidden="true"
             >✨</motion.span>
             <div>
-              <p>WEATHER DATA ASSISTANT</p>
-              <h2 id="assistant-heading">날씨 AI 도우미</h2>
+              <p>실시간 날씨 분석</p>
+              <h2 id="assistant-heading">날씨 도우미</h2>
             </div>
           </div>
           <div class="assistant-controls">
             <button type="button" aria-label="대화 초기화" @click="clearConversation">↻</button>
-            <button type="button" aria-label="날씨 AI 도우미 닫기" @click="closeAssistant">×</button>
+            <button type="button" aria-label="날씨 도우미 닫기" @click="closeAssistant">×</button>
           </div>
         </header>
 
@@ -89,7 +89,7 @@ watch(
             :initial="{ opacity: 0, y: 8 }"
             :animate="{ opacity: 1, y: 0 }"
           >
-            <span v-if="message.role === 'assistant'" aria-hidden="true">AI</span>
+            <span v-if="message.role === 'assistant'" aria-hidden="true">봇</span>
             <p>{{ message.text }}</p>
           </motion.div>
 
@@ -146,8 +146,8 @@ watch(
       @click="openAssistant"
     >
       <span aria-hidden="true">✦</span>
-      <strong>날씨 AI</strong>
-      <small>무엇이든 물어보세요</small>
+      <strong>날씨 도우미</strong>
+      <small>날씨를 물어보세요</small>
     </motion.button>
   </div>
 </template>

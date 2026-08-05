@@ -108,7 +108,7 @@ const weatherIcon = computed(() => getWeatherEmoji(props.city.status))
 
           <div class="weather-summary">
             <span class="region-label">
-              <i aria-hidden="true"></i> LIVE WEATHER
+              <i aria-hidden="true"></i> 실시간 관측
             </span>
             <h3>{{ city.name }} <small>({{ city.description }})</small></h3>
             <p>현재 기온: <strong>{{ displayTemp }}{{ unitSymbol }}</strong></p>
@@ -161,7 +161,7 @@ const weatherIcon = computed(() => getWeatherEmoji(props.city.status))
         <div class="back-heading">
           <span aria-hidden="true">{{ weatherIcon }}</span>
           <div>
-            <small>QUICK WEATHER</small>
+            <small>빠른 기상 정보</small>
             <h3>{{ city.name }} 빠른 정보</h3>
           </div>
         </div>
