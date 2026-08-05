@@ -46,7 +46,7 @@ const lowerOrbY = useTransform(scrollYProgress, [0, 1], [0, -130])
             >🌤️</motion.span>
             <div>
               <h1 id="page-title">날씨 대시보드</h1>
-              <p class="subtitle">전국 주요 도시의 날씨를 한눈에 확인해 보세요.</p>
+              <p class="subtitle">국내외 주요 도시의 날씨를 한눈에 확인해 보세요.</p>
             </div>
           </div>
 
@@ -54,15 +54,23 @@ const lowerOrbY = useTransform(scrollYProgress, [0, 1], [0, -130])
             <div class="navigation-links">
               <RouterLink to="/">
                 <span aria-hidden="true">⌂</span>
-                날씨 대시보드
+                국내 날씨
+              </RouterLink>
+              <RouterLink to="/world">
+                <span aria-hidden="true">🌍</span>
+                세계 날씨
+              </RouterLink>
+              <RouterLink to="/game">
+                <span aria-hidden="true">🎮</span>
+                날씨 게임
               </RouterLink>
               <RouterLink to="/about">
                 <span aria-hidden="true">ⓘ</span>
                 서비스 소개
               </RouterLink>
-              <RouterLink to="/game">
-                <span aria-hidden="true">🎮</span>
-                날씨 게임
+              <RouterLink to="/signup">
+                <span aria-hidden="true">♙</span>
+                회원가입
               </RouterLink>
             </div>
 
@@ -220,10 +228,10 @@ h1 {
   justify-content: center;
   gap: 7px;
   min-height: 40px;
-  padding: 8px 14px;
+  padding: 8px 10px;
   border-radius: 10px;
   color: #6c8297;
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   font-weight: 750;
   text-decoration: none;
   transition:
@@ -287,8 +295,10 @@ h1 {
   }
 
   .navigation-links {
+    display: grid;
     width: 100%;
     gap: 3px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .navigation-links a {

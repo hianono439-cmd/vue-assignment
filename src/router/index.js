@@ -12,6 +12,16 @@ const routes = [
     component: () => import('../views/WeatherAboutView.vue'),
   },
   {
+    path: '/world',
+    name: 'world-weather',
+    component: () => import('../views/WorldWeatherView.vue'),
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: () => import('../views/SignUpView.vue'),
+  },
+  {
     path: '/weather/:cityId',
     name: 'weather-detail',
     component: () => import('../views/WeatherDetailView.vue'),

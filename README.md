@@ -1,6 +1,6 @@
 # Vue 날씨 대시보드 과제
 
-Composition API, 컴포넌트 분리, Vue Router, Pinia 전역 상태 관리, Axios 기반 OpenWeatherMap 실시간 날씨 연동과 Motion for Vue 애니메이션을 적용한 프로젝트입니다.
+Composition API, 컴포넌트 분리, Vue Router, Pinia 전역 상태 관리, Axios 기반 OpenWeatherMap 실시간 날씨 연동, Motion for Vue 애니메이션과 Element Plus UI를 적용한 프로젝트입니다.
 
 ## 실행
 
@@ -19,6 +19,8 @@ npm run dev
 - `/#/about`: 서비스 소개
 - `/#/weather/:cityId`: 도시별 상세 기상 정보
 - `/#/game`: 실시간 날씨 단서로 도시를 맞히는 미니 게임
+- `/#/world`: 전 세계 주요 도시 날씨 비교
+- `/#/signup`: Element Plus 회원가입 폼
 - 그 외 주소: 404 페이지
 
 GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router를 사용합니다.
@@ -29,6 +31,8 @@ GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router
 - `views/WeatherDetailView.vue`: 동적 도시 ID로 상세 실시간 관측 정보 조회
 - `views/WeatherAboutView.vue`: 서비스 소개 화면
 - `views/WeatherGameView.vue`: 5라운드 도시 날씨 맞히기 게임
+- `views/WorldWeatherView.vue`: 6개 대륙 12개 도시의 실시간 날씨 비교
+- `views/SignUpView.vue`: 입력값 검증과 완료 화면을 포함한 회원가입
 - `views/NotFoundView.vue`: Catch-all 404 화면
 - `components/exercise/`: 공통 카드, 검색창, 날씨 카드 컴포넌트
 - `components/exercise/WeatherAssistant.vue`: 모든 화면에서 사용하는 날씨 챗봇 패널
@@ -36,6 +40,8 @@ GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router
 - `router/index.js`: 지연 로딩 라우트와 Hash Router 설정
 - `services/weatherApi.js`: Axios 인스턴스, OpenWeatherMap 요청 및 응답 변환
 - `stores/weatherStore.js`: 홈과 상세 페이지가 공유하는 실시간 날씨 상태
+- `stores/worldWeatherStore.js`: 세계 도시 날씨 상태
+- `stores/memberStore.js`: 실습용 회원 프로필 상태와 브라우저 저장
 
 ## Composition API 실습
 
@@ -83,6 +89,15 @@ GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router
 - 질문은 외부 서비스로 보내지 않고 브라우저에 로딩된 OpenWeather 데이터만 사용
 
 날씨 도우미는 브라우저에 불러온 실시간 데이터를 질문에 맞게 정리해서 보여줍니다. 질문 내용은 외부로 전송하지 않습니다.
+
+## Element Plus 활용
+
+- `main.js`에서 Element Plus와 기본 스타일을 전역 등록
+- `el-form`, `el-input`, `el-select`, `el-checkbox`로 회원가입 폼 구성
+- 이름·이메일·비밀번호·비밀번호 확인·필수 동의 항목 검증
+- 비밀번호는 저장하지 않고 이름·이메일·관심 도시만 브라우저에 보관
+- 세계 날씨 화면에서 `el-card`, `el-radio-group`, `el-tag`, `el-progress`, `el-loading`, `el-skeleton`, `el-alert` 활용
+- 6개 대륙 12개 도시 필터링과 최고·최저·평균 기온 및 강수 도시 요약
 
 ## GitHub Pages 환경변수
 
